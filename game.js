@@ -66,6 +66,10 @@ let Player = function() {
 			if(keys.a) this.velocity.x -= this.acl;
 			if(keys.s) this.velocity.y += this.acl;
 			if(keys.w) this.velocity.y -= this.acl;
+			if(keys.D) this.velocity.x += this.acl;
+			if(keys.A) this.velocity.x -= this.acl;
+			if(keys.S) this.velocity.y += this.acl;
+			if(keys.W) this.velocity.y -= this.acl;
 			var x = 0, y = 0;
 			if(keys.ArrowRight) x++;
 			if(keys.ArrowLeft) x--;
