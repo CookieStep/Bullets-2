@@ -1,7 +1,7 @@
 let scale = 40;
 let distance = (x, y, x2=0, y2=0) => Math.sqrt(Math.pow(x - x2, 2) + Math.pow(y - y2, 2));
 var above = false;
-var score = 0, lives = 3;
+var score = 0, lives = 3, added = 0;
 let game = function() {
 	if(enemies.length == 0 && particles.length == 0) generateLevel();
 	ctx.clear(`#0002`);
@@ -20,8 +20,11 @@ let game = function() {
 		if(touch(player, particle) && player.alive) {
 			particle.die();
 			player.xp += particle.xp; player.px += particle.px;
-			if((score % 100) + particle.xp > 100) lives++;
-			player.sk += particle.px + particle.xp; score += particle.xp;
+			var max = 100 * Math.pow(2, added);
+			while(score + particle.xp > max) {
+				lives++; added++;
+				max = 100 * Math.pow(2, added);
+			} player.sk += particle.px + particle.xp; score += particle.xp;
 		}
 	}
 	for(let enemy of enemies) {
@@ -140,9 +143,8 @@ let Player = function() {
 			ctx.strokeStyle = hardcore? "#f50": practice? "#5f5" : player.color;
 			var shots = Math.floor(this.sk / 25);
 			ctx.beginPath();
-			if(shots) for(var r = 0; r < Math.PI * 2; r += Math.PI * 2 / shots) {
-				ctx.square(x + Math.cos(4 * this.r/shots + r) * this.s * scale, y + Math.sin(4 * this.r/shots + r) * this.s * scale, s, s/4)
-			} ctx.stroke();
+			if(shots) for(var r = 0; r < Math.PI * 2; r += Math.PI * 2 / shots) ctx.square(x + Math.cos(4 * this.r/shots + r) * this.s * scale, y + Math.sin(4 * this.r/shots + r) * this.s * scale, s, s/4)
+			ctx.stroke();
 		}
 	});
 };

@@ -26,8 +26,8 @@ function menu() {
 		"Hardcore",
 		[
 			,"Hit space to play!",
-			"Play the game with infinite lives!",
-			"Play the game with no lives..."
+			"You are guaranteed to win!",
+			"Can you win without dying?"
 		]
 	];
 	options[options.length - 1] = options[options.length - 1][menu.selected]

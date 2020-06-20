@@ -35,15 +35,28 @@ let generateLevel = function() {
 			} spawn(new Enemy);
 		break;
 		case 6: 
-		for(var a = 0; a < 5; a++) {
-			spawn(new Dash);
-			spawn(new Enemy);
-		}
+			for(var a = 0; a < 5; a++) {
+				spawn(new Dash);
+				spawn(new Enemy);
+			}
 		break;
 		case 7: 
-		for(var a = 0; a < 7; a++) {
+			for(var a = 0; a < 7; a++) {
+				spawn(new Dash);
+			} spawn(new Wall);
+		case 8:
 			spawn(new Dash);
-		} spawn(new Wall);
+			spawn(new Enemy);
+			spawn(new Curve);
+			spawn(new Dash);
+			spawn(new Enemy);
+			spawn(new Curve);
+			spawn(new Patrol);
+			spawn(new Wall);
+		break;
+		case 9:
+			
+		break;
 		default:
 			--Level;
 		break;

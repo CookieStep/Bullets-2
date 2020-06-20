@@ -126,10 +126,10 @@ let Wall = function() {
 			ctx.lineTo(x - b, y + a);
 			ctx.fill();
 		},
-		xp: 30,
+		xp: 40,
 		color: "#559"
 	});
-}
+};
 let WallFollow = function() {
 	Enemy.call(this);
 	Object.assign(this, {
@@ -145,7 +145,7 @@ let WallFollow = function() {
 			this.velocity.x += Math.cos(rad) * this.acl;
 			this.velocity.y += Math.sin(rad) * this.acl;
 		},
-		xp: 30,
+		xp: 20,
 		draw() {
 			var s = this.s/2; x = this.x + s; y = this.y + s;
 			var rad = Math.atan2(this.velocity.y, this.velocity.x) + Math.PI/4;
@@ -169,7 +169,7 @@ let Dash = function() {
 	Object.assign(this, {
 		color: "#ffa",
 		velocity: {x: Math.cos(rad) * this.acl, y: Math.sin(rad) * this.acl},
-		xp: 10,
+		xp: 50,
 		draw() {
 			var {x, y, s} = this;
 			x *= scale; y *= scale; s *= scale;
@@ -180,7 +180,7 @@ let Dash = function() {
 		},
 		last : 0,
 		tick() {
-			if(player.alive && distanceBetween(this, player) < 5 && !this.last) {
+			if(player.alive && distanceBetween(this, player) < 10 && !this.last) {
 				rad = radianTo(this, player)
 				Object.assign(this.velocity, {x: Math.cos(rad) * this.spd, y: Math.sin(rad) * this.spd})
 				this.last = 100;
@@ -193,4 +193,4 @@ let Dash = function() {
 			this.color = `rgb(255, 255, ${1.7 * this.last})`
 		}
 	});
-}
+};
