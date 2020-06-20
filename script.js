@@ -39,8 +39,8 @@ function menu() {
 				"Hardcore",
 				[
 					,"Hit space to play!",
-					"You are guaranteed to win!",
-					"Can you win without dying?"
+					"You can't unlock skills, but you can't lose either!",
+					"Your 100% not allowed to die."
 				]
 			];
 			var colors = [
