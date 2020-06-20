@@ -1,4 +1,4 @@
-var Level = 9, color = "000";
+var Level = 0, color = "000";
 let generateLevel = function() {
 	switch(Level) {
 		case 0:
