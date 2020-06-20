@@ -39,7 +39,7 @@ function menu() {
 				"Hardcore",
 				[
 					,"Hit space to play!",
-					"You can't unlock skills, but you can't lose either!",
+					"No fear, no skills.",
 					"Your 100% not allowed to die."
 				]
 			];
