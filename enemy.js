@@ -208,7 +208,7 @@ let Boss = function() {
 	let die = this.die;
 	this.die = function() {
 		die();
-		if(!this.alive && !saveData.sword) {
+		if(!this.alive && !saveData.sword && !practice) {
 			saveData.sword = true;
 			tip.text = "New Skill Unlocked";
 			tip.time = 250;
