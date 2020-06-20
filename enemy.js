@@ -69,8 +69,8 @@ let spawn = function(what) {
 		child.num = a;
 		enemies.push(child);
 	}
-	if(what instanceof Boss) for(let a = 0; a < 4; a++) {
-		let child = new BossFollow;
+	if(what instanceof PatrolBoss) for(let a = 0; a < 4; a++) {
+		let child = new PatrolBossFollow;
 		child.parent = what;
 		what.children.push(child);
 		child.x = what.x + (what.s - child.s)/2;
@@ -189,7 +189,7 @@ let Dash = function() {
 		},
 		last : 0,
 		tick() {
-			if(player.alive && distanceBetween(this, player) < 10 && !this.last) {
+			if(player.alive && distanceBetween(this, player) < 7.5 && !this.last) {
 				rad = radianTo(this, player)
 				Object.assign(this.velocity, {x: Math.cos(rad) * this.spd, y: Math.sin(rad) * this.spd})
 				this.last = 100;
@@ -203,7 +203,7 @@ let Dash = function() {
 		}
 	});
 };
-let Boss = function() {
+let PatrolBoss = function() {
 	Entity.call(this);
 	Object.assign(this, {
 		color: "#ff0",
@@ -217,10 +217,20 @@ let Boss = function() {
 				this.alive = false;
 				if(this.exp) exp(this);
 				else this.time = -1;
-				if(!practice && !saveData.sword) {
+				if(!practice && !unlocked.sword) {
 					saveData.sword = true;
-					tip.text = "New Skill Unlocked";
+					if(hardcore && !unlocked.checkpoint) {
+						tip.text = "New Checkpoint, Skill Unlocked";
+						tip.time = 250;
+						saveData.checkpoint = 1;
+					}else{
+						tip.text = "New Skill Unlocked";
+						tip.time = 250;
+					}
+				}else{
+					tip.text = "New Checkpoint Unlocked";
 					tip.time = 250;
+					saveData.checkpoint = 1;
 				}
 			}
 		},
@@ -268,7 +278,7 @@ let Boss = function() {
 				for(let a = 0; a < 4; a++) {
 					let child = new Curve;
 					child.time = 0;
-					child.color = "#faa"
+					child.color = `#f55`;
 					this.children.push(child);
 					child.x = this.x + (this.s - child.s)/2;
 					child.y = this.y + (this.s - child.s)/2;
@@ -284,7 +294,7 @@ let Boss = function() {
 			}else if(this.phase == 3) {
 				for(let a = 0; a < 8; a++) {
 					let child = new Enemy(Math.PI / 4 * a);
-					child.color = "#faa"
+					child.color = `#f55`;
 					this.children.push(child);
 					child.x = this.x + (this.s - child.s)/2;
 					child.y = this.y + (this.s - child.s)/2;
@@ -307,14 +317,14 @@ let Boss = function() {
 				this.time++
 				if(this.time % 500 == 0) {
 					let child = new Enemy(-rad);
-					child.color = "#faa"
+					child.color = `#f55`;
 					child.x = this.x + (this.s - child.s)/2;
 					child.y = this.y + (this.s - child.s)/2;
 					enemies.push(child);
 				}
 				if(this.time % 500 == 250) {
 					let child = new Curve;
-					child.color = "#faa"
+					child.color = `#f55`;
 					child.x = this.x + (this.s - child.s)/2;
 					child.y = this.y + (this.s - child.s)/2;
 					enemies.push(child);
@@ -355,7 +365,7 @@ let Boss = function() {
 		}
 	});
 };
-let BossFollow = function() {
+let PatrolBossFollow = function() {
 	WallFollow.call(this);
 	Object.assign(this, {
 		tick() {

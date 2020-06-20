@@ -2,21 +2,21 @@ var Level = 0, color = "000";
 let generateLevel = function() {
 	switch(Level) {
 		case 0:
-		for(var a = 0; a < 5; a++) {
-			spawn(new Enemy);
-			spawn(new Curve);
-		} break;
+			for(var a = 0; a < 5; a++) {
+				spawn(new Enemy);
+				spawn(new Curve);
+			} break;
 		case 1:
-		for(var a = 0; a < 10; a++) {
-			spawn(new Enemy);
-		} break;
+			for(var a = 0; a < 10; a++) {
+				spawn(new Enemy);
+			} break;
 		case 2:
-		for(var a = 0; a < 4; a++) {
-			spawn(new Patrol);
-			if(a > 3) continue;
-			spawn(new Curve);
-			spawn(new Enemy);
-		} break;
+			for(var a = 0; a < 4; a++) {
+				spawn(new Patrol);
+				if(a > 3) continue;
+				spawn(new Curve);
+				spawn(new Enemy);
+			} break;
 		case 3:
 			for(var a = 0; a < 5; a++) {
 				spawn(new Patrol);
@@ -55,7 +55,14 @@ let generateLevel = function() {
 			spawn(new Wall);
 		break;
 		case 9:
-			spawn(new Boss)
+			spawn(new PatrolBoss)
+		break;
+		case 10:
+			for(var a = 0; a < 3; a++) {
+				spawn(new Chase);
+				spawn(new Dash);
+				spawn(new Patrol);
+			}
 		break;
 		default:
 			--Level;

@@ -1,7 +1,8 @@
 const canvas = document.createElement("canvas"), ctx = canvas.getContext("2d");
 let saveData = localStorage;
 let unlocked = {
-	sword: saveData.sword
+	sword: Boolean(saveData.sword),
+	checkpoint: Number(saveData.checkpoint)
 };
 addEventListener("load", function() {
 	var {body, documentElement} = document;
@@ -15,13 +16,6 @@ addEventListener("load", function() {
 	player.x = (game.width - player.s)/2;
 	player.y = (game.height - player.s)/2;
 	document.title = "Bullets 2";
-	if(saveData.autosave) {
-		menu.active = false;
-		enemies = saveData.save.enemies
-		particles = saveData.save.particles
-		player = saveData.save.player
-		bullets = saveData.save.bullets
-	}
 	update();
 });
 function update() {
@@ -39,8 +33,8 @@ function menu() {
 				"Hardcore",
 				[
 					,"Hit space to play!",
-					"No fear, no skills.",
-					"Your 100% not allowed to die."
+					"No fear, no rewards.",
+					"Death is no allowed."
 				]
 			];
 			var colors = [
@@ -79,9 +73,31 @@ function menu() {
 				"Sans"
 			];
 		break;
+		case 3:
+			var options = [
+			"Stage Select",
+			"Stage 1",
+			"Stage 2",
+			[
+				,"The easiest and most basic stage",
+				"Next level Adventure"
+			]
+		];
+		var colors = [
+			"#fff",
+			"#ff0",
+			"#f00"
+		];
+		var fonts = [
+			"Georgia",
+			"Comic Sans MS",
+			"Arial"
+		];
+		break;
 	}
 	options[options.length - 1] = options[options.length - 1][menu.selected]
 	fonts.push(fonts[menu.selected]);
+	colors.push(colors[menu.selected]);
 	var h = canvas.height / options.length;
 	ctx.clear("#000");
 	for(var opt = 1; opt < options.length - 1; opt++) {
@@ -110,8 +126,11 @@ function menu() {
 	}
 	if(menu.selected < 1) menu.selected += options.length - 2;
 	menu.selected = ((menu.selected - 1) % (options.length - 2)) + 1;
-	if(keys.Backspace) {
+	if(keys.Backspace == 1 || keys.Escape == 1) {
+		if(keys.Backspace) keys.Backspace = 2;
+		if(keys.Escape) keys.Escape = 2;
 		if(menu.active == 2) menu.active = 1;
+		if(menu.active == 3) menu.active = 2;
 	}
 	if(keys[" "] == 1 || keys.Enter == 1) {
 		if(keys[" "]) keys[" "] = 2;
@@ -125,6 +144,11 @@ function menu() {
 			break;
 			case 2:
 				if(menu.selected == 2) player.sword = true;
+				if(unlocked.checkpoint) menu.active = 3;
+				else menu.active = false;
+			break;
+			case 3:
+				Level = menu.selected * 10 - 10;
 				menu.active = false;
 			break;
 		}
