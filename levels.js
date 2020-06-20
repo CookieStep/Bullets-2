@@ -7,7 +7,7 @@ let generateLevel = function() {
 			spawn(new Curve);
 		} break;
 		case 1:
-		for(var a = 0; a < 15; a++) {
+		for(var a = 0; a < 10; a++) {
 			spawn(new Enemy);
 		} break;
 		case 2:
@@ -34,6 +34,16 @@ let generateLevel = function() {
 				spawn(new Wall);
 			} spawn(new Enemy);
 		break;
+		case 6: 
+		for(var a = 0; a < 5; a++) {
+			spawn(new Dash);
+			spawn(new Enemy);
+		}
+		break;
+		case 7: 
+		for(var a = 0; a < 7; a++) {
+			spawn(new Dash);
+		} spawn(new Wall);
 		default:
 			--Level;
 		break;

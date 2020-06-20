@@ -42,17 +42,29 @@ let game = function() {
 		player.hitbox();
 		for(let bullet of bullets) bullet.hitbox();
 	}
-	ctx.fillStyle = hardcore? "#f50": player.color;
-	ctx.strokeStyle = hardcore? "#f50": player.color;
-	ctx.font = `${scale}px Arial`;
+	ctx.fillStyle = hardcore? "#f50": practice? "#5f5" : player.color;
+	ctx.strokeStyle = hardcore? "#f50": practice? "#5f5" : player.color;
+	var fonts = [
+		"Arial",
+		"Comic Sans MS",
+		"Sans"
+	];
+	ctx.font = `${scale}px ${fonts[hardcore? 2: practice? 1: 0]}`;
 	var txt = `Level ${Level}`;
 	ctx.fillText(txt, canvas.width - ctx.measureText(txt).width, scale);
 	txt = Math.round(score);
 	ctx.fillText(txt, 0, scale);
-	var x = (canvas.width - scale * lives)/2
+	var x = (canvas.width - scale * Math.abs(lives))/2;
 	ctx.beginPath();
-	for(var i = 0; i < lives; i++) {
+	for(var i = 0; i < lives && !hardcore; i++) {
 		ctx.square(x + scale * i, 0, scale, scale/4);
+	}
+	for(var i = 0; (i < -lives) || (hardcore && i < lives); i++) {
+		ctx.square(x + scale * i, 0, scale, scale/4);
+		ctx.moveTo(x + scale * i, 0);
+		ctx.lineTo(x + scale + scale * i, scale);
+		ctx.moveTo(x + scale + scale * i, 0);
+		ctx.lineTo(x + scale * i, scale);
 	}
 	ctx.stroke();
 };
@@ -81,7 +93,7 @@ let Player = function() {
 		die() {
 			if(!this.inv && this.alive) {
 				exp(this);
-				if(lives > 0 && !hardcore) {
+				if((lives > 0 && !hardcore) || practice) {
 					this.x = game.width / 2;
 					this.y = game.height / 2;
 					this.sk = 50;
@@ -125,7 +137,7 @@ let Player = function() {
 			s /= 8;
 			x -= s/2;
 			y -= s/2;
-			ctx.strokeStyle = hardcore? "#f50": player.color;
+			ctx.strokeStyle = hardcore? "#f50": practice? "#5f5" : player.color;
 			var shots = Math.floor(this.sk / 25);
 			ctx.beginPath();
 			if(shots) for(var r = 0; r < Math.PI * 2; r += Math.PI * 2 / shots) {

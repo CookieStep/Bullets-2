@@ -6,7 +6,7 @@ let Enemy = function() {
 	Entity.call(this);
 	var rad = Math.PI * 2 * Math.random();
 	Object.assign(this, {
-		color: "#aa0",
+		color: "#770",
 		velocity: {x: Math.cos(rad) * this.acl, y: Math.sin(rad) * this.acl},
 		xp: 10,
 		draw() {
@@ -73,7 +73,7 @@ let spawn = function(what) {
 let Patrol = function() {
 	Entity.call(this);
 	Object.assign(this, {
-		color: "#faa",
+		color: "#aaa",
 		xp: 25,
 		goal: 0,
 		tick() {
@@ -162,4 +162,35 @@ let WallFollow = function() {
 		},
 		color: "#595"
 	})
+};
+let Dash = function() {
+	Entity.call(this);
+	var rad = Math.PI * 2 * Math.random();
+	Object.assign(this, {
+		color: "#ffa",
+		velocity: {x: Math.cos(rad) * this.acl, y: Math.sin(rad) * this.acl},
+		xp: 10,
+		draw() {
+			var {x, y, s} = this;
+			x *= scale; y *= scale; s *= scale;
+			ctx.fillStyle = this.color;
+			ctx.beginPath();
+			ctx.square(x, y, s, s/2);
+			ctx.fill();
+		},
+		last : 0,
+		tick() {
+			if(player.alive && distanceBetween(this, player) < 5 && !this.last) {
+				rad = radianTo(this, player)
+				Object.assign(this.velocity, {x: Math.cos(rad) * this.spd, y: Math.sin(rad) * this.spd})
+				this.last = 100;
+			}else{
+				rad = Math.atan2(this.velocity.y, this.velocity.x);
+				this.velocity.x += Math.cos(rad) * this.acl;
+				this.velocity.y += Math.sin(rad) * this.acl;
+				if(this.last) --this.last;
+			}
+			this.color = `rgb(255, 255, ${1.7 * this.last})`
+		}
+	});
 }

@@ -8,8 +8,9 @@ addEventListener("load", function() {
 		width: canvas.width / scale,
 		height: canvas.height / scale
 	})
-	player.x = game.width / 2;
-	player.y = game.height / 2;
+	player.x = (game.width - player.s)/2;
+	player.y = (game.height - player.s)/2;
+	document.title = "Bullets 2"
 	update();
 });
 function update() {
@@ -19,11 +20,13 @@ function update() {
 }
 function menu() {
 	var options = [
-		"Bullets",
+		"Bullets 2",
 		"Normal",
+		"Practice",
 		"Hardcore",
 		[
 			,"Hit space to play!",
+			"Play the game with infinite lives!",
 			"Play the game with no lives..."
 		]
 	];
@@ -31,12 +34,14 @@ function menu() {
 	var colors = [
 		"#fff",
 		player.color,
+		"#5f5",
 		"#f50",
 		"#fff"
 	];
 	var fonts = [
 		"Georgia",
 		"Arial",
+		"Comic Sans MS",
 		"Sans"
 	];
 	fonts.push(fonts[menu.selected]);
@@ -70,7 +75,8 @@ function menu() {
 	menu.selected = ((menu.selected - 1) % (options.length - 2)) + 1;
 	if(keys[" "]) {
 		menu.active = false;
-		if(menu.selected == 2) hardcore = true;
+		if(menu.selected == 2) practice = true;
+		if(menu.selected == 3) hardcore = true;
 	}
 }
 menu.active = true;
