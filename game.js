@@ -1,6 +1,6 @@
 let scale = 40;
 let distance = (x, y, x2=0, y2=0) => Math.sqrt(Math.pow(x - x2, 2) + Math.pow(y - y2, 2));
-var above = false;
+var tip = {};
 var score = 0, lives = 3, added = 0;
 let game = function() {
 	if(enemies.length == 0 && particles.length == 0) generateLevel();
@@ -70,6 +70,10 @@ let game = function() {
 		ctx.lineTo(x + scale * i, scale);
 	}
 	ctx.stroke();
+	if(tip.time) {
+		tip.time--;
+		ctx.fillText(tip.text, (canvas.width - ctx.measureText(tip.text).width)/2, (canvas.height - scale)/2);
+	}
 };
 let Player = function() {
 	Entity.call(this);
@@ -90,7 +94,10 @@ let Player = function() {
 			if(keys.ArrowLeft) x--;
 			if(keys.ArrowDown) y++;
 			if(keys.ArrowUp) y--;
-			if((x || y) && this.sk >= 25) this.shoot(Math.atan2(y, x));
+			if((x || y) && this.sk >= 25) {
+				if(player.sword) this.slice(Math.atan2(y, x));
+				else this.shoot(Math.atan2(y, x));
+			}
 			this.sk += 0.1;
 		},
 		die() {
@@ -113,6 +120,15 @@ let Player = function() {
 		draw() {
 			var {x, y, s} = this
 			x *= scale; y *= scale; s *= scale;
+			if(this.lastSwing) {
+				var rad = this.swingRad + (Math.PI/2 * (25 - this.lastSwing - 1/2)/25)
+				ctx.lineWidth = scale * this.s/4;
+				ctx.strokeStyle = "#555";
+				ctx.beginPath();
+				ctx.moveTo(x + s/2, y + s/2);
+				ctx.lineTo(x + s/2 + Math.cos(rad) * 3 * scale, y + s/2 + Math.sin(rad) * 3 * scale);
+				ctx.stroke();
+			}
 			ctx.fillStyle = this.color;
 			ctx.beginPath();
 			ctx.square(x, y, s, s*2/5);
@@ -138,12 +154,16 @@ let Player = function() {
 				} ctx.stroke();
 			}
 			s /= 8;
-			x -= s/2;
-			y -= s/2;
 			ctx.strokeStyle = hardcore? "#f50": practice? "#5f5" : player.color;
 			var shots = Math.floor(this.sk / 25);
 			ctx.beginPath();
-			if(shots) for(var r = 0; r < Math.PI * 2; r += Math.PI * 2 / shots) ctx.square(x + Math.cos(4 * this.r/shots + r) * this.s * scale, y + Math.sin(4 * this.r/shots + r) * this.s * scale, s, s/4)
+			if(shots) for(var r = 0; r < Math.PI * 2; r += Math.PI * 2 / shots)
+				if(player.sword) {
+					ctx.moveTo(x + Math.cos(4 * this.r/shots + r) * this.s * scale * 0.7, y + Math.sin(4 * this.r/shots + r) * this.s * scale * 0.7)
+					ctx.lineTo(x + Math.cos(4 * this.r/shots + r) * this.s * scale, y + Math.sin(4 * this.r/shots + r) * this.s * scale)
+				}
+				else
+					ctx.square(x + Math.cos(4 * this.r/shots + r) * this.s * scale - s/2, y + Math.sin(4 * this.r/shots + r) * this.s * scale - s/2, s, s/4)
 			ctx.stroke();
 		}
 	});

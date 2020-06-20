@@ -20,7 +20,7 @@ let Entity = function() {
 		lastShot : 0,
 		shoot(rad) {
 			if(!this.lastShot) {
-				this.lastShot = 10 + Math.floor(Math.random() * 16);
+				this.lastShot = 15;
 				rad = Math.floor(rad * 4/Math.PI) * Math.PI/4
 				var bullet = new Bullet(rad, this)
 				var x = this.x + (this.s - bullet.s)/2,
@@ -30,11 +30,34 @@ let Entity = function() {
 				this.sk -= 25;
 			}
 		},
+		lastSwing: 0,
+		swingRad: 0,
+		slice(rad) {
+			if(!this.lastSwing) {
+				this.swingRad = rad - Math.PI/4;
+				this.lastSwing = 25;
+				this.sk -= 25;
+			}
+		},
+		slash() {
+			if(this instanceof Player) {
+				var rad = this.swingRad + (Math.PI/2 * (25 - this.lastSwing)/25)
+				for(var i = 3/4; i < 3; i += 1/4) {
+					var tip = {x: this.x + this.s * 3/8, y: this.y + this.s * 3/8, s: this.s/4}
+					tip.x += Math.cos(rad) * i;
+					tip.y += Math.sin(rad) * i;
+					for(var enemy of enemies) {
+						if(touch(tip, enemy)) enemy.die()
+					}
+				}
+				this.lastSwing--;
+			}
+		},
 		alive: true,
 		exp: true,
 		inv: 0,
 		die() {
-			if(this.alive) {
+			if(this.alive && !this.inv) {
 				this.alive = false;
 				if(this.exp) exp(this);
 				else this.time = -1;
@@ -92,8 +115,16 @@ let Entity = function() {
 			ctx.lineWidth = 1;
 			ctx.strokeStyle = "#faa";
 			ctx.strokeRect(x, y, s ,s);
+			var rad = this.swingRad + (Math.PI/2 * (25 - this.lastSwing)/25)
+			for(var i = 3/4; i < 3 && this.lastSwing; i += 1/4) {
+				var tip = {x: this.x + this.s * 3/8, y: this.y + this.s * 3/8, s: this.s/4}
+				tip.x += Math.cos(rad) * i;
+				tip.y += Math.sin(rad) * i;
+				ctx.strokeRect(tip.x * scale, tip.y * scale, tip.s * scale, tip.s * scale);
+			}
 		},
 		update() {
+			if(this.lastSwing) this.slash();
 			this.tick();
 			this.forces();
 			if(this.lastShot) this.lastShot--;

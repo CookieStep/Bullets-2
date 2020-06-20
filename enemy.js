@@ -2,9 +2,9 @@ let touch = (obp, obj) => Math.abs(obp.x - obj.x + (obp.s - obj.s) / 2) < (obp.s
 let distanceBetween = (obp, obj) => distance(obp.x + obp.s/2, obp.y + obp.s/2, obj.x + obj.s/2, obj.y + obj.s/2);
 let radianTo = (obj, obp) => Math.atan2(obp.y - obj.y + (obp.s - obj.s) / 2, obp.x - obj.x + (obp.s - obj.s) / 2)
 let enemies = [];
-let Enemy = function() {
+let Enemy = function(rad) {
 	Entity.call(this);
-	var rad = Math.PI * 2 * Math.random();
+	if(!rad) rad = Math.PI * 2 * Math.random();
 	Object.assign(this, {
 		color: "#770",
 		velocity: {x: Math.cos(rad) * this.acl, y: Math.sin(rad) * this.acl},
@@ -66,6 +66,15 @@ let spawn = function(what) {
 		child.parent = what;
 		child.x = what.x;
 		child.y = what.y;
+		child.num = a;
+		enemies.push(child);
+	}
+	if(what instanceof Boss) for(let a = 0; a < 4; a++) {
+		let child = new BossFollow;
+		child.parent = what;
+		what.children.push(child);
+		child.x = what.x + (what.s - child.s)/2;
+		child.y = what.y + (what.s - child.s)/2;
 		child.num = a;
 		enemies.push(child);
 	}
@@ -193,4 +202,173 @@ let Dash = function() {
 			this.color = `rgb(255, 255, ${1.7 * this.last})`
 		}
 	});
+};
+let Boss = function() {
+	Entity.call(this);
+	let die = this.die;
+	this.die = function() {
+		die();
+		if(!this.alive && !saveData.sword) {
+			saveData.sword = true;
+			tip.text = "New Skill Unlocked";
+			tip.time = 250;
+		}
+	}
+	Object.assign(this, {
+		color: "#ff0",
+		xp: 1000,
+		s: 2,
+		goal: 0,
+		children: [],
+		tele: false,
+		tick() {
+			var alive = false
+			this.children.forEach((child) => {
+				if(child.alive) alive = true;
+			})
+			if(alive) {
+				this.inv = 10;
+				if(this.goal) {
+					var rad = radianTo(this, this.loc);
+					this.velocity.x += Math.cos(rad) * this.acl;
+					this.velocity.y += Math.sin(rad) * this.acl;
+					--this.goal;
+				}else{
+					this.goal = 75 + Math.floor(Math.random() * 26);
+					this.goal *= 4;
+					do{
+						var {x, y, s} = this;
+						x += Math.random() * 20 - 10;
+						y += Math.random() * 20 - 10;
+					}while(x < 0 || y < 0 || x > game.width - this.s || y > game.height - this.s)
+					this.loc = {x, y, s};
+				}
+			}else if(!this.tele) {
+				this.tele = true;
+				this.goal = 0;
+				this.phase = 1;
+				var dis = 10 / Math.sin(Math.PI/2);
+				do{
+					this.x = Math.random() * (game.width - this.s);
+					this.y = Math.random() * (game.height - this.s);
+				}while(distanceBetween(player, this) < dis)
+			}else if(this.phase == 1){
+				for(let a = 0; a < 4; a++) {
+					let child = new Enemy(Math.PI * a / 2);
+					child.color = "faa"
+					this.children.push(child);
+					child.x = this.x + (this.s - child.s)/2;
+					child.y = this.y + (this.s - child.s)/2;
+					enemies.push(child);
+				} this.phase++;
+			}else if(this.phase == 2) {
+				for(let a = 0; a < 4; a++) {
+					let child = new Curve;
+					child.time = 0;
+					child.color = "faa"
+					this.children.push(child);
+					child.x = this.x + (this.s - child.s)/2;
+					child.y = this.y + (this.s - child.s)/2;
+					enemies.push(child);
+				} this.phase++;
+				this.tele = true;
+				this.goal = 0;
+				var dis = 10 / Math.sin(Math.PI/2);
+				do{
+					this.x = Math.random() * (game.width - this.s);
+					this.y = Math.random() * (game.height - this.s);
+				}while(distanceBetween(player, this) < dis)
+			}else if(this.phase == 3) {
+				for(let a = 0; a < 8; a++) {
+					let child = new Enemy(Math.PI / 4 * a);
+					child.color = "faa"
+					this.children.push(child);
+					child.x = this.x + (this.s - child.s)/2;
+					child.y = this.y + (this.s - child.s)/2;
+					enemies.push(child);
+				} this.phase++;
+				this.tele = true;
+				this.goal = 0;
+				var dis = 10 / Math.sin(Math.PI/2);
+				do{
+					this.x = Math.random() * (game.width - this.s);
+					this.y = Math.random() * (game.height - this.s);
+				}while(distanceBetween(player, this) < dis)
+				this.time = 0;
+			}else{
+				if(player.alive) {
+					var rad = radianTo(player, this);
+					this.velocity.x += Math.cos(rad) * this.acl;
+					this.velocity.y += Math.sin(rad) * this.acl;
+				}
+				this.time++
+				if(this.time % 500 == 0) {
+					let child = new Enemy(-rad);
+					child.color = "faa"
+					child.x = this.x + (this.s - child.s)/2;
+					child.y = this.y + (this.s - child.s)/2;
+					enemies.push(child);
+				}
+				if(this.time % 500 == 250) {
+					let child = new Curve;
+					child.color = "faa"
+					child.x = this.x + (this.s - child.s)/2;
+					child.y = this.y + (this.s - child.s)/2;
+					enemies.push(child);
+				}
+			}
+		},
+		r: 0,
+		draw() {
+			var {x, y, s} = this
+			x *= scale; y *= scale; s *= scale;
+			ctx.fillStyle = this.color;
+			ctx.beginPath();
+			ctx.square(x, y, s, s*2/5);
+			ctx.fill();
+			ctx.beginPath();
+			ctx.lineWidth = s / 16;
+			ctx.strokeStyle = "#fff";
+			x += s/2;
+			y += s/2;
+			this.r += Math.PI / 128;
+			if(this.inv) {
+				for(var r = 0; r < Math.PI * 2; r += Math.PI/2) {
+					ctx.moveTo(x + Math.cos(this.r + r) * s, y + Math.sin(this.r + r) * s);
+					ctx.lineTo(x + Math.cos(this.r - Math.PI / 16 + r) * s * 1.5, y + Math.sin(this.r - Math.PI / 16 + r) * s * 1.5);
+					ctx.lineTo(x + Math.cos(this.r + Math.PI / 16 + r) * s * 1.5, y + Math.sin(this.r + Math.PI / 16 + r) * s * 1.5);
+					ctx.lineTo(x + Math.cos(this.r + r) * s, y + Math.sin(this.r + r) * s);
+				} ctx.stroke();
+			}
+			x -= s/2;
+			y -= s/2;
+			ctx.beginPath();
+			var rad = radianTo(this, this.loc);
+			ctx.fillStyle = `#f55`;
+			x += Math.cos(rad) * s/5;
+			y += Math.sin(rad) * s/5;
+			ctx.square(x + s/4, y + s/4, s/2, s*1/5);
+			ctx.fill();
+		}
+	});
+};
+let BossFollow = function() {
+	WallFollow.call(this);
+	Object.assign(this, {
+		tick() {
+			var {s, r} = this.parent;
+			var {x, y} = this.parent.loc;
+			var rad = this.parent.r * 2;
+			rad += this.num * Math.PI / 2;
+			var dis = 4;
+			x = x + Math.cos(rad) * dis;
+			y = y + Math.sin(rad) * dis;
+			this.loc = {x, y, s};
+			var rad = radianTo(this, this.loc);
+			this.velocity.x += Math.cos(rad) * this.acl;
+			this.velocity.y += Math.sin(rad) * this.acl;
+		},
+		xp: 25,
+		color: "#955"
+	})
 };

@@ -1,4 +1,4 @@
-var Level = 0, color = "000";
+var Level = 9, color = "000";
 let generateLevel = function() {
 	switch(Level) {
 		case 0:
@@ -55,7 +55,7 @@ let generateLevel = function() {
 			spawn(new Wall);
 		break;
 		case 9:
-			
+			spawn(new Boss)
 		break;
 		default:
 			--Level;
