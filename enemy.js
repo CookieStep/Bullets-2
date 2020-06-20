@@ -146,7 +146,7 @@ let WallFollow = function() {
 			var {x, y, s, r} = this.parent;
 			var rad = Math.atan2(this.parent.velocity.y, this.parent.velocity.x);
 			rad += Math.sign(Math.round(this.num) - 1/2) * Math.PI/2;
-			var dis = 3;
+			var dis = 2;
 			x = x + Math.cos(rad) * dis;
 			y = y + Math.sin(rad) * dis;
 			this.loc = {x, y, s};
@@ -227,7 +227,7 @@ let PatrolBoss = function() {
 						tip.text = "New Skill Unlocked";
 						tip.time = 250;
 					}
-				}else{
+				}else if(hardcore && !unlocked.checkpoint) {
 					tip.text = "New Checkpoint Unlocked";
 					tip.time = 250;
 					saveData.checkpoint = 1;

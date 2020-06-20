@@ -1,4 +1,4 @@
-let scale = 40;
+let scale = 35;
 let distance = (x, y, x2=0, y2=0) => Math.sqrt(Math.pow(x - x2, 2) + Math.pow(y - y2, 2));
 var tip = {};
 var score = 0, lives = 3, added = 0;
