@@ -54,6 +54,9 @@ let game = function() {
 	];
 	ctx.font = `${scale}px ${fonts[hardcore? 2: practice? 1: 0]}`;
 	var txt = `Level ${Level}`;
+	if(Level % 10 == 0) {
+		txt = `Boss ${Level / 10}`;
+	}
 	ctx.fillText(txt, canvas.width - ctx.measureText(txt).width, scale);
 	txt = Math.round(score);
 	ctx.fillText(txt, 0, scale);

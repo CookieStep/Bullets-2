@@ -205,15 +205,6 @@ let Dash = function() {
 };
 let Boss = function() {
 	Entity.call(this);
-	let die = this.die;
-	this.die = function() {
-		die();
-		if(!this.alive && !saveData.sword && !practice) {
-			saveData.sword = true;
-			tip.text = "New Skill Unlocked";
-			tip.time = 250;
-		}
-	}
 	Object.assign(this, {
 		color: "#ff0",
 		xp: 1000,
@@ -221,6 +212,18 @@ let Boss = function() {
 		goal: 0,
 		children: [],
 		tele: false,
+		die() {
+			if(this.alive && !this.inv) {
+				this.alive = false;
+				if(this.exp) exp(this);
+				else this.time = -1;
+				if(!practice && !saveData.sword) {
+					saveData.sword = true;
+					tip.text = "New Skill Unlocked";
+					tip.time = 250;
+				}
+			}
+		},
 		tick() {
 			var alive = false
 			this.children.forEach((child) => {
@@ -255,7 +258,7 @@ let Boss = function() {
 			}else if(this.phase == 1){
 				for(let a = 0; a < 4; a++) {
 					let child = new Enemy(Math.PI * a / 2);
-					child.color = "faa"
+					child.color = "#faa"
 					this.children.push(child);
 					child.x = this.x + (this.s - child.s)/2;
 					child.y = this.y + (this.s - child.s)/2;
@@ -265,7 +268,7 @@ let Boss = function() {
 				for(let a = 0; a < 4; a++) {
 					let child = new Curve;
 					child.time = 0;
-					child.color = "faa"
+					child.color = "#faa"
 					this.children.push(child);
 					child.x = this.x + (this.s - child.s)/2;
 					child.y = this.y + (this.s - child.s)/2;
@@ -281,7 +284,7 @@ let Boss = function() {
 			}else if(this.phase == 3) {
 				for(let a = 0; a < 8; a++) {
 					let child = new Enemy(Math.PI / 4 * a);
-					child.color = "faa"
+					child.color = "#faa"
 					this.children.push(child);
 					child.x = this.x + (this.s - child.s)/2;
 					child.y = this.y + (this.s - child.s)/2;
@@ -304,14 +307,14 @@ let Boss = function() {
 				this.time++
 				if(this.time % 500 == 0) {
 					let child = new Enemy(-rad);
-					child.color = "faa"
+					child.color = "#faa"
 					child.x = this.x + (this.s - child.s)/2;
 					child.y = this.y + (this.s - child.s)/2;
 					enemies.push(child);
 				}
 				if(this.time % 500 == 250) {
 					let child = new Curve;
-					child.color = "faa"
+					child.color = "#faa"
 					child.x = this.x + (this.s - child.s)/2;
 					child.y = this.y + (this.s - child.s)/2;
 					enemies.push(child);
