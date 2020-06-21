@@ -8,21 +8,21 @@ let Particle = function() {
         tick() {
             this.time--
         },
-        time: 10 + Math.random() * 16
+        time: 10 + Math.random() * 10
     })
 }
 let Exp = function(xp, px) {
     Entity.call(this);
     var rad = Math.random() * Math.PI * 2;
     var tx = xp + px;
-    this.spd *= Math.random() * 1/2 + 1/2
+    var spd = this.spd * (Math.random() * 1/4 + 1/4)
     var rs = Math.random() * Math.PI / 16;
     Object.assign(this, {
         s: 0.25,
         r: Math.random() * Math.PI * 2,
         xp, px,
         color: `hsl(${tx * 25}, 100%, 70%)`,
-        velocity: {x: Math.cos(rad) * this.spd, y: Math.sin(rad) * this.spd},
+        velocity: {x: Math.cos(rad) * spd, y: Math.sin(rad) * spd},
         tick() {
             this.time--;
             this.r += rs;
@@ -45,13 +45,13 @@ let Exp = function(xp, px) {
             ctx.lineTo(x - b, y + a);
             ctx.fill();
         },
-        time: 2500
+        time: 5000
     })
 }
 let exp = function(what) {
     if(what instanceof Player) {
         what.px /= 2;
-        what.px += what.xp;
+        what.px += what.xp * 0.75;
         what.xp = 0;
     } if(what.xp || what.px) for(var i = 0; i < 25; i++) {
         var xp = new Exp(what.xp / 25, what.px / 25);

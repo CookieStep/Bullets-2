@@ -2,125 +2,62 @@ var Level = 0;
 let generateLevel = function() {
 	switch(Level) {
 		case 0:
-			for(var a = 0; a < 5; a++) {
+			for(var i = 0; i < 10; i++) {
 				spawn(new Enemy);
-				spawn(new Curve);
-			} break;
+			}
+		break;
 		case 1:
-			for(var a = 0; a < 10; a++) {
+			for(var i = 0; i < 5; i++) {
 				spawn(new Enemy);
-			} break;
-		case 2:
-			for(var a = 0; a < 4; a++) {
-				spawn(new Patrol);
-				if(a > 3) continue;
 				spawn(new Curve);
-				spawn(new Enemy);
-			} break;
+			}
+		break;
+		case 2:
+			for(var i = 0; i < 10; i++) {
+				spawn(new Enemy(0));
+			}
+		break;
 		case 3:
-			for(var a = 0; a < 5; a++) {
-				spawn(new Patrol);
-				spawn(new Enemy);
+			for(var i = 0; i < 10; i++) {
+				spawn(new Curve(0, 0));
 			}
 		break;
 		case 4:
-			for(var a = 0; a < 10; a++) {
-				spawn(new Curve);
-				enemies[enemies.length - 1].time = 0;
+			for(var i = 0; i < 10; i++) {
+				spawn(new Enemy(Math.PI * i / 2));
 			}
 		break;
 		case 5:
-			for(var a = 0; a < 3; a++) {
-				spawn(new Wall);
-			} spawn(new Enemy);
-		break;
-		case 6: 
-			for(var a = 0; a < 5; a++) {
-				spawn(new Dash);
+			for(var i = 0; i < 5; i++) {
 				spawn(new Enemy);
+				spawn(new Patrol);
 			}
 		break;
-		case 7: 
-			for(var a = 0; a < 4; a++) {
-				spawn(new Dash);
-				if(a > 1) continue;
-				spawn(new Wall);
+		case 6:
+			for(var i = 0; i < 10; i++) {
+				spawn(new Patrol);
 			}
 		break;
-		case 8:
-			spawn(new Dash);
-			spawn(new Enemy);
-			spawn(new Curve);
-			spawn(new Dash);
-			spawn(new Enemy);
-			spawn(new Curve);
-			spawn(new Patrol);
-			spawn(new Wall);
+		case 7:
+			for(var i = 0; i < 10; i++) {
+				spawn(new Patrol(true));
+			}
+		break;
+		case 8: 
+			for(var i = 0; i < 2; i++) {
+				spawn(new Enemy(Math.PI * i));
+				spawn(new Enemy(Math.PI * (i + 1/2)));
+				spawn(new Patrol);
+				spawn(new Patrol(true));
+				spawn(new Curve(0));
+			}
 		break;
 		case 9:
-			spawn(new PatrolBoss);
+			spawn(new PatrolBoss)
 		break;
-		case 10:
-			for(var a = 0; a < 3; a++) {
-				spawn(new Chase);
-				spawn(new Dash);
-				spawn(new Boost);
-			} spawn(new Patrol);
-		break;
-		case 11:
-			for(var a = 0; a < 2; a++) {
-				spawn(new Chase);
-				spawn(new Boost);
-				spawn(new Boost)
-				spawn(new Shoot);
-				spawn(new Shoot);
-			}
-		break;
-		case 12:
-			for(var a = 0; a < 2; a++) {
-				spawn(new Shoot);
-				spawn(new Boost);
-				spawn(new Chase);
-				spawn(new Patrol);
-				spawn(new TPatrol);
-			}
-		break;
-		case 13:
-			for(var a = 0; a < 3; a++) {
-				spawn(new Boost);
-				spawn(new Dash);
-				spawn(new Boost);
-			} spawn(new TPatrol);
-		break;
-		case 14:
-			for(var a = 0; a < 10; a++) {
-				spawn(new TPatrol);
-			}
-		break;
-		case 15:
-			for(var a = 0; a < 10; a++) {
-				spawn(new Boost);
-			}
-		break;
-		case 16:
-			for(var a = 0; a < 5; a++) {
-				spawn(new Dash);
-				spawn(new Boost);
-			}
-		break;
-		case 17:
-			for(var a = 0; a < 2; a++) {
-				spawn(new Chase);
-				spawn(new Boost);
-				spawn(new Shoot);
-				spawn(new TPatrol);
-				spawn(new TPatrol);
-			}
-		break;
-		case 18:
-		break
 		default:
 			--Level;
 		break;
 	} ++Level;
+	time = 0;
 }

@@ -32,11 +32,13 @@ function menu() {
 				"Easy",
 				"Practice",
 				"Hardcore",
+				"Insane",
 				[
 					,"Hit space to play!",
 					"Just can't take the heat.",
 					"No fear, no rewards.",
-					"Death is not allowed."
+					"Death is not allowed.",
+					"No breaks, no rests."
 				]
 			];
 			var colors = [
@@ -45,14 +47,16 @@ function menu() {
 				"#5f5",
 				"#fff",
 				"#f50",
+				"#700",
 				"#fff"
 			];
 			var fonts = [
 				"Georgia",
 				"Arial",
-				"Lucida Console",
+				"Courier New",
 				"Comic Sans MS",
-				"Sans"
+				"Sans",
+				"Lucida Console"
 			];
 		break;
 		case 2:
@@ -133,8 +137,18 @@ function menu() {
 	if(keys.Backspace == 1 || keys.Escape == 1) {
 		if(keys.Backspace) keys.Backspace = 2;
 		if(keys.Escape) keys.Escape = 2;
-		if(menu.active == 2) menu.active = 1;
-		if(menu.active == 3) menu.active = 2;
+		if(menu.active == 2) {
+			menu.active = 1;
+			insane = false;
+			hardcore = false;
+			easy = false;
+			practice = false;
+			time = 500;
+		}
+		if(menu.active == 3) {
+			menu.active = 2;
+			delete player.sword;
+		}
 	}
 	if(keys[" "] == 1 || keys.Enter == 1) {
 		if(keys[" "]) keys[" "] = 2;
@@ -144,7 +158,11 @@ function menu() {
 				if(menu.selected == 2) easy = true;
 				if(menu.selected == 3) practice = true;
 				if(menu.selected == 4) hardcore = true;
-				if(unlocked.sword) menu.active = 2;
+				if(menu.selected == 5) {
+					insane = true;
+					time = 0;
+				}
+					if(unlocked.sword) menu.active = 2;
 				else menu.active = false;
 			break;
 			case 2:

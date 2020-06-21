@@ -6,3 +6,5 @@ var hardcore = false;
 var practice = false;
 //Real game to much for you?
 var easy = false;
+//The true test
+var insane = false;

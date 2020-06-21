@@ -129,7 +129,7 @@ let TPatrol = function() {
 		tick() {
 			if(this.goal) {
 				--this.goal;
-				this.color = `rgb(${127.5 + (100 - this.goal)/8 * 2.55}, ${127.5 + (100 - this.goal)/8 * 2.55}, ${127.5 + (100 - this.goal)/8 * 2.55})`
+				this.color = `rgb(${127.5 + (100 - this.goal)/4 * 2.55}, ${127.5 + (100 - this.goal)/4 * 2.55}, ${127.5 + (100 - this.goal)/4 * 2.55})`
 			}else{
 				this.goal = 50 + Math.floor(Math.random() * 51);
 				this.goal *= 2;
@@ -150,6 +150,61 @@ let TPatrol = function() {
 		}
 	});
 };
-let BulletBomb = function() {
-	
-}
+let Bomber = function() {
+	Entity.call(this);
+	var rad = Math.PI * 2 * Math.random();
+	this.acl *= 3/4;
+	this.spd *= 3/4;
+	Object.assign(this, {
+		color: "#555",
+		velocity: {x: Math.cos(rad) * this.acl, y: Math.sin(rad) * this.acl},
+		xp: 80,
+		r: 0,
+		draw() {
+            rad = Math.atan2(this.velocity.y, this.velocity.x);
+			var {x, y, s} = this;
+            x *= scale; y *= scale; s *= scale;
+            x += s/2;
+            y += s/2;
+			ctx.fillStyle = this.color;
+            ctx.beginPath();
+			ctx.arc(x, y, s/2, 0, Math.PI * 2);
+			ctx.fill();
+			ctx.beginPath();
+			ctx.strokeStyle = "#aaa";
+			ctx.moveTo(x, y);
+			ctx.lineTo(x - Math.cos(this.r) * s * 3/4, y - Math.sin(this.r) * s * 3/4)
+			ctx.stroke();
+		},
+		tick() {
+			if(player.alive && distanceBetween(this, player) < 7.5) {
+				if(distanceBetween(this, player) > 5) {
+					rad = radianTo(this, player);
+					this.r = rad;
+					this.velocity.x += Math.cos(rad) * this.acl;
+					this.velocity.y += Math.sin(rad) * this.acl;
+					rad = Math.atan2(this.velocity.y, this.velocity.x);
+				}else{
+					this.time++;
+					if(this.time >= 110) {
+						this.alive = false;
+						for(let a = 0; a < Math.PI * 2; a += Math.PI/4) {
+							let bullet = new EBullet(a, {color: "#fa5"});
+							var x = this.x + (this.s - bullet.s)/2,
+								y = this.y + (this.s - bullet.s)/2;
+							x += Math.cos(a); y += Math.sin(a);
+							Object.assign(bullet, {x, y});
+						}
+					}
+				}
+			}else{
+				this.time = 10;
+				this.r = rad;
+				rad = Math.atan2(this.velocity.y, this.velocity.x);
+				this.velocity.x += Math.cos(rad) * this.acl;
+				this.velocity.y += Math.sin(rad) * this.acl;
+			}
+			this.color = `rgb(${Math.abs((this.time % 20) - 10) * 17 + 85}, ${Math.abs((this.time % 20) - 10) * 17 + 85}, ${Math.abs((this.time % 20) - 10) * 17 + 85})`;
+		}
+	});
+};

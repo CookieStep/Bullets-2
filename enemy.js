@@ -2,9 +2,8 @@ let touch = (obp, obj) => Math.abs(obp.x - obj.x + (obp.s - obj.s) / 2) < (obp.s
 let distanceBetween = (obp, obj) => distance(obp.x + obp.s/2, obp.y + obp.s/2, obj.x + obj.s/2, obj.y + obj.s/2);
 let radianTo = (obj, obp) => Math.atan2(obp.y - obj.y + (obp.s - obj.s) / 2, obp.x - obj.x + (obp.s - obj.s) / 2)
 let enemies = [];
-let Enemy = function(rad) {
+let Enemy = function(rad=(Math.PI * 2 * Math.random())) {
 	Entity.call(this);
-	if(!rad) rad = Math.PI * 2 * Math.random();
 	Object.assign(this, {
 		color: "#770",
 		velocity: {x: Math.cos(rad) * this.acl, y: Math.sin(rad) * this.acl},
@@ -24,14 +23,12 @@ let Enemy = function(rad) {
 		}
 	});
 };
-let Curve = function() {
+let Curve = function(time=(Math.random() * 180), rad=(Math.PI * 2 * Math.random())) {
 	Entity.call(this);
-	var rad = Math.PI * 2 * Math.random();
 	Object.assign(this, {
 		color: "#fa5",
 		velocity: {x: Math.cos(rad) * this.acl, y: Math.sin(rad) * this.acl},
-		time : Math.random() * 180,
-		xp: 15,
+		time, xp: 15,
 		tick() {
 			rad = Math.atan2(this.velocity.y, this.velocity.x);
 			rad += this.time++ * Math.PI / 180;
@@ -70,7 +67,7 @@ let spawn = function(what) {
 		enemies.push(child);
 	}
 	if(what instanceof PatrolBoss) for(let a = 0; a < 4; a++) {
-		let child = new PatrolBossFollow;
+		let child = new Enemy(Math.PI * a/2);
 		child.parent = what;
 		what.children.push(child);
 		child.x = what.x + (what.s - child.s)/2;
@@ -79,7 +76,7 @@ let spawn = function(what) {
 		enemies.push(child);
 	}
 };
-let Patrol = function() {
+let Patrol = function(spaz) {
 	Entity.call(this);
 	Object.assign(this, {
 		color: "#aaa",
@@ -88,11 +85,16 @@ let Patrol = function() {
 		tick() {
 			if(this.goal) {
 				var rad = radianTo(this, this.loc);
+				var {x, y, s} = this;
+				x += this.velocity.x; y += this.velocity.y;
+				var acl = distanceBetween({x, y, s}, this.loc);
+				if(acl > this.acl) acl = this.acl;
 				this.velocity.x += Math.cos(rad) * this.acl;
 				this.velocity.y += Math.sin(rad) * this.acl;
 				--this.goal;
 			}else{
 				this.goal = 75 + Math.floor(Math.random() * 26);
+				if(spaz) this.goal -= 75
 				do{
 					var {x, y, s} = this;
 					x += Math.random() * 10 - 5;
@@ -110,9 +112,10 @@ let Patrol = function() {
 			ctx.fill();
 			ctx.beginPath()
 			var rad = radianTo(this, this.loc);
+			var acl = distanceBetween(this, this.loc) / distance(3, 3);
 			ctx.fillStyle = `#777`;
-			x += Math.cos(rad) * s/5;
-			y += Math.sin(rad) * s/5;
+			x += Math.cos(rad) * s/5 * acl;
+			y += Math.sin(rad) * s/5 * acl;
 			ctx.square(x + s/4, y + s/4, s/2, s*1/5);
 			ctx.fill();
 		}
@@ -205,6 +208,8 @@ let Dash = function() {
 };
 let PatrolBoss = function() {
 	Entity.call(this);
+	tip.text = "Patrol Boss";
+	tip.time = 100;
 	Object.assign(this, {
 		color: "#ff0",
 		xp: 1000,
@@ -243,6 +248,10 @@ let PatrolBoss = function() {
 				this.inv = 10;
 				if(this.goal) {
 					var rad = radianTo(this, this.loc);
+					var {x, y, s} = this;
+					x += this.velocity.x; y += this.velocity.y;
+					var acl = distanceBetween({x, y, s}, this.loc);
+					if(acl > this.acl) acl = this.acl;
 					this.velocity.x += Math.cos(rad) * this.acl;
 					this.velocity.y += Math.sin(rad) * this.acl;
 					--this.goal;
@@ -357,9 +366,10 @@ let PatrolBoss = function() {
 			y -= s/2;
 			ctx.beginPath();
 			var rad = radianTo(this, this.loc);
-			ctx.fillStyle = `#f55`;
-			x += Math.cos(rad) * s/5;
-			y += Math.sin(rad) * s/5;
+			var acl = distance(this.velocity.x / this.spd, this.velocity.y / this.spd);
+			ctx.fillStyle = `#777`;
+			x += Math.cos(rad) * s/5 * acl;
+			y += Math.sin(rad) * s/5 * acl;
 			ctx.square(x + s/4, y + s/4, s/2, s*1/5);
 			ctx.fill();
 		}

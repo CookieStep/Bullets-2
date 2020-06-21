@@ -1,10 +1,15 @@
 let scale = 40;
 let distance = (x, y, x2=0, y2=0) => Math.sqrt(Math.pow(x - x2, 2) + Math.pow(y - y2, 2));
-var tip = {};
+var tip = {}, time = 500;
 var score = 0, lives = 3, added = 0, gameColor, pow = () => Math.ceil(Level / 10);
 let game = function() {
-	gameColor = hardcore? "#f50": practice? "#fff" : easy? "#5f5": player.color;
-	if(enemies.length == 0 && particles.length == 0) generateLevel();
+	gameColor = hardcore? "#f50": practice? "#fff" : easy? "#5f5": insane? "#700": player.color;
+	if(insane) {
+		if(time < 0) {
+			generateLevel();
+			time = 1000;
+		}else time--
+	}else if(enemies.length == 0) if(time++ >= 50) generateLevel();
 	ctx.clear(`#0002`);
 	particles = particles.filter((particle) => particle.time > 0);
 	bullets = bullets.filter((bullet) => bullet.time > 0);
@@ -21,11 +26,11 @@ let game = function() {
 		if(touch(player, particle) && player.alive) {
 			particle.die();
 			player.xp += particle.xp; player.px += particle.px;
-			var max = (easy? 25: 50) * added + (easy? 10: 25) * Math.pow(1.2, added);
+			var max = (easy? 50: 100) * added + (easy? 10: 25) * Math.pow(1.2, added);
 			while(score + particle.xp > max) {
 				lives++; added++;
-				max = (easy? 25: 50) * added + (easy? 10: 25) * Math.pow(1.2, added);
-			} player.sk += particle.px + particle.xp; score += particle.xp;
+				max = (easy? 50: 100) * added + (easy? 10: 25) * Math.pow(1.2, added);
+			} player.sk += (particle.px)/(pow() * pow()) + (particle.xp) / pow(); score += particle.xp;
 		}
 	}
 	for(let enemy of enemies) {
@@ -50,12 +55,13 @@ let game = function() {
 	ctx.strokeStyle = gameColor;
 	var fonts = [
 		"Arial",
-		"Lucida Console",
+		"Courier New",
 		"Comic Sans MS",
-		"Sans"
+		"Sans",
+		"Lucida Console"
 	];
-	ctx.font = `${scale}px ${fonts[hardcore? 3: easy? 1: practice? 2: 0]}`;
-	var txt = `Level ${Level}`;
+	ctx.font = `${scale}px ${fonts[insane? 4: hardcore? 3: easy? 1: practice? 2: 0]}`;
+	var txt = insane? `Wave ${Level}`: `Level ${Level}`;
 	if(Level % 10 == 0) {
 		txt = `Boss ${Level / 10}`;
 	}
@@ -73,6 +79,10 @@ let game = function() {
 		ctx.lineTo(x + scale + scale * i, scale);
 		ctx.moveTo(x + scale + scale * i, 0);
 		ctx.lineTo(x + scale * i, scale);
+	}
+	if(insane) {
+		var txt = Math.floor(time / 10);
+		ctx.fillText(txt, (canvas.width - ctx.measureText(txt).width)/2, canvas.height - scale/4);
 	}
 	ctx.stroke();
 	if(tip.time) {
@@ -159,14 +169,15 @@ let Player = function() {
 			s /= 8;
 			ctx.strokeStyle = gameColor;
 			var shots = Math.floor(this.sk / (easy? 15: 25));
+			var shot = Math.sqrt(shots);
 			ctx.beginPath();
 			if(shots) for(var r = 0; r < Math.PI * 2; r += Math.PI * 2 / shots)
 				if(player.sword) {
-					ctx.moveTo(x + Math.cos(4 * this.r/shots + r) * this.s * scale * 0.7, y + Math.sin(4 * this.r/shots + r) * this.s * scale * 0.7)
-					ctx.lineTo(x + Math.cos(4 * this.r/shots + r) * this.s * scale, y + Math.sin(4 * this.r/shots + r) * this.s * scale)
+					ctx.moveTo(x + Math.cos(4 * this.r/shot + r) * this.s * scale * 0.7, y + Math.sin(4 * this.r/shot + r) * this.s * scale * 0.7)
+					ctx.lineTo(x + Math.cos(4 * this.r/shot + r) * this.s * scale, y + Math.sin(4 * this.r/shot + r) * this.s * scale)
 				}
 				else
-					ctx.square(x + Math.cos(4 * this.r/shots + r) * this.s * scale - s/2, y + Math.sin(4 * this.r/shots + r) * this.s * scale - s/2, s, s/4)
+					ctx.square(x + Math.cos(4 * this.r/shot + r) * this.s * scale - s/2, y + Math.sin(4 * this.r/shot + r) * this.s * scale - s/2, s, s/4)
 			ctx.stroke();
 		}
 	});

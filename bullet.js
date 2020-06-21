@@ -1,6 +1,6 @@
 let Bullet = function(rad, parent) {
     Entity.call(this);
-    this.spd *= easy? 3: 1.5;
+    this.spd *= easy? 5: 1.5;
     Object.assign(this, {
         s: 0.25,
         velocity: {x: Math.cos(rad) * this.spd, y: Math.sin(rad) * this.spd},
