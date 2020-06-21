@@ -110,6 +110,7 @@ let Boost = function() {
 			}
             this.color = `rgb(${170 + 0.85 * this.last}, 255, ${170 + 0.85 * this.last})`;
             this.spd = 0.1 + (this.last / 1000);
+            this.spd /= easy? 2: 1
 		}
 	});
 };

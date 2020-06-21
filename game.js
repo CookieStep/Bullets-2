@@ -1,8 +1,9 @@
-let scale = 35;
+let scale = 40;
 let distance = (x, y, x2=0, y2=0) => Math.sqrt(Math.pow(x - x2, 2) + Math.pow(y - y2, 2));
 var tip = {};
-var score = 0, lives = 3, added = 0;
+var score = 0, lives = 3, added = 0, gameColor;
 let game = function() {
+	gameColor = hardcore? "#f50": practice? "#fff" : easy? "#5f5": player.color;
 	if(enemies.length == 0 && particles.length == 0) generateLevel();
 	ctx.clear(`#0002`);
 	particles = particles.filter((particle) => particle.time > 0);
@@ -20,10 +21,10 @@ let game = function() {
 		if(touch(player, particle) && player.alive) {
 			particle.die();
 			player.xp += particle.xp; player.px += particle.px;
-			var max = 100 * Math.pow(2, added);
+			var max = (easy? 50: 100) * Math.pow(2, added);
 			while(score + particle.xp > max) {
 				lives++; added++;
-				max = 100 * Math.pow(2, added);
+				max = (easy? 50: 100) * Math.pow(2, added);
 			} player.sk += particle.px + particle.xp; score += particle.xp;
 		}
 	}
@@ -45,14 +46,16 @@ let game = function() {
 		player.hitbox();
 		for(let bullet of bullets) bullet.hitbox();
 	}
-	ctx.fillStyle = hardcore? "#f50": practice? "#5f5" : player.color;
-	ctx.strokeStyle = hardcore? "#f50": practice? "#5f5" : player.color;
+	ctx.fillStyle = gameColor;
+	ctx.strokeStyle = gameColor;
 	var fonts = [
+		"Georgia",
 		"Arial",
+		"Lucida Console",
 		"Comic Sans MS",
 		"Sans"
 	];
-	ctx.font = `${scale}px ${fonts[hardcore? 2: practice? 1: 0]}`;
+	ctx.font = `${scale}px ${fonts[hardcore? 3: easy? 2: practice? 1: 0]}`;
 	var txt = `Level ${Level}`;
 	if(Level % 10 == 0) {
 		txt = `Boss ${Level / 10}`;
@@ -80,6 +83,7 @@ let game = function() {
 };
 let Player = function() {
 	Entity.call(this);
+	if(easy) this.spd *= 2;
 	Object.assign(this, {
 		acl: this.acl * 2,
 		r: Math.PI * 3 / 2,
@@ -97,7 +101,7 @@ let Player = function() {
 			if(keys.ArrowLeft) x--;
 			if(keys.ArrowDown) y++;
 			if(keys.ArrowUp) y--;
-			if((x || y) && this.sk >= 25) {
+			if((x || y) && this.sk >= (easy? 15: 25)) {
 				if(player.sword) this.slice(Math.atan2(y, x));
 				else this.shoot(Math.atan2(y, x));
 			}
@@ -124,7 +128,7 @@ let Player = function() {
 			var {x, y, s} = this
 			x *= scale; y *= scale; s *= scale;
 			if(this.lastSwing) {
-				var rad = this.swingRad + (Math.PI/2 * (25 - this.lastSwing - 1/2)/25)
+				var rad = this.swingRad + (Math.PI/2 * ((easy? 15: 25) - this.lastSwing - 1/2)/(easy? 15: 25))
 				ctx.lineWidth = scale * this.s/4;
 				ctx.strokeStyle = "#555";
 				ctx.beginPath();
@@ -157,8 +161,8 @@ let Player = function() {
 				} ctx.stroke();
 			}
 			s /= 8;
-			ctx.strokeStyle = hardcore? "#f50": practice? "#5f5" : player.color;
-			var shots = Math.floor(this.sk / 25);
+			ctx.strokeStyle = gameColor;
+			var shots = Math.floor(this.sk / (easy? 15: 25));
 			ctx.beginPath();
 			if(shots) for(var r = 0; r < Math.PI * 2; r += Math.PI * 2 / shots)
 				if(player.sword) {

@@ -29,24 +29,28 @@ function menu() {
 			var options = [
 				"Bullets 2",
 				"Normal",
+				"Easy",
 				"Practice",
 				"Hardcore",
 				[
 					,"Hit space to play!",
+					"Just can't take the heat.",
 					"No fear, no rewards.",
-					"Death is no allowed."
+					"Death is not allowed."
 				]
 			];
 			var colors = [
 				"#fff",
 				player.color,
 				"#5f5",
+				"#fff",
 				"#f50",
 				"#fff"
 			];
 			var fonts = [
 				"Georgia",
 				"Arial",
+				"Lucida Console",
 				"Comic Sans MS",
 				"Sans"
 			];
@@ -137,8 +141,9 @@ function menu() {
 		if(keys.Enter) keys.Enter = 2;
 		switch(menu.active) {
 			case 1:
-				if(menu.selected == 2) practice = true;
-				if(menu.selected == 3) hardcore = true;
+				if(menu.selected == 2) easy = true;
+				if(menu.selected == 3) practice = true;
+				if(menu.selected == 4) hardcore = true;
 				if(unlocked.sword) menu.active = 2;
 				else menu.active = false;
 			break;

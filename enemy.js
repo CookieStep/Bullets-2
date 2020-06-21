@@ -235,7 +235,7 @@ let PatrolBoss = function() {
 			}
 		},
 		tick() {
-			var alive = false
+			var alive = false;
 			this.children.forEach((child) => {
 				if(child.alive) alive = true;
 			})
@@ -266,7 +266,7 @@ let PatrolBoss = function() {
 					this.y = Math.random() * (game.height - this.s);
 				}while(distanceBetween(player, this) < dis)
 			}else if(this.phase == 1){
-				for(let a = 0; a < 4; a++) {
+				for(let a = 1; a <= 4; a++) {
 					let child = new Enemy(Math.PI * a / 2);
 					child.color = "#faa"
 					this.children.push(child);
@@ -292,7 +292,7 @@ let PatrolBoss = function() {
 					this.y = Math.random() * (game.height - this.s);
 				}while(distanceBetween(player, this) < dis)
 			}else if(this.phase == 3) {
-				for(let a = 0; a < 8; a++) {
+				for(let a = 1; a <= 8; a++) {
 					let child = new Enemy(Math.PI / 4 * a);
 					child.color = `#f55`;
 					this.children.push(child);

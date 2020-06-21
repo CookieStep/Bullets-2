@@ -7,7 +7,7 @@ let Entity = function() {
 		friction : 0.9,
 		velocity: {x: 0, y: 0},
 		acl: 0.01,
-		spd: 0.1,
+		spd: easy? 0.05: 0.1,
 		draw() {
 			var {x, y, s} = this
 			x *= scale; y *= scale; s *= scale;
@@ -20,8 +20,8 @@ let Entity = function() {
 		lastShot : 0,
 		shoot(rad) {
 			if(!this.lastShot) {
-				if(this instanceof Player) this.lastShot = 15;
-				else this.lastShot = 100;
+				if(this instanceof Player) this.lastShot = easy? 10: 15;
+				else this.lastShot = easy? 150: 100;
 				rad = Math.floor(rad * 4/Math.PI) * Math.PI/4
 				if(this instanceof Player) var bullet = new Bullet(rad, this);
 				else var bullet = new EBullet(rad, this)
@@ -29,7 +29,7 @@ let Entity = function() {
 					y = this.y + (this.s - bullet.s)/2;
 				x += Math.cos(rad); y += Math.sin(rad);
 				Object.assign(bullet, {x, y});
-				this.sk -= 25;
+				this.sk -= (easy? 15: 25);
 			}
 		},
 		lastSwing: 0,
@@ -37,13 +37,13 @@ let Entity = function() {
 		slice(rad) {
 			if(!this.lastSwing) {
 				this.swingRad = rad - Math.PI/4;
-				this.lastSwing = 25;
-				this.sk -= 25;
+				this.lastSwing = (easy? 15: 25);
+				this.sk -= (easy? 15: 25);
 			}
 		},
 		slash() {
 			if(this instanceof Player) {
-				var rad = this.swingRad + (Math.PI/2 * (25 - this.lastSwing)/25)
+				var rad = this.swingRad + (Math.PI/2 * ((easy? 15: 25) - this.lastSwing)/(easy? 15: 25))
 				for(var i = 3/4; i < 3; i += 1/4) {
 					var tip = {x: this.x + this.s * 3/8, y: this.y + this.s * 3/8, s: this.s/4}
 					tip.x += Math.cos(rad) * i;

@@ -4,3 +4,5 @@ var hitbox = false;
 var hardcore = false;
 //Play with infinite lives
 var practice = false;
+//Real game to much for you?
+var easy = false;
