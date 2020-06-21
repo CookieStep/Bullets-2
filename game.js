@@ -54,7 +54,7 @@ let game = function() {
 		"Comic Sans MS",
 		"Sans"
 	];
-	ctx.font = `${scale}px ${fonts[hardcore? 3: easy? 2: practice? 1: 0]}`;
+	ctx.font = `${scale}px ${fonts[hardcore? 3: easy? 1: practice? 2: 0]}`;
 	var txt = `Level ${Level}`;
 	if(Level % 10 == 0) {
 		txt = `Boss ${Level / 10}`;
@@ -113,14 +113,14 @@ let Player = function() {
 					this.x = game.width / 2;
 					this.y = game.height / 2;
 					this.sk = 50;
-					this.inv = 100;
+					this.inv = easy? 250: 100;
 					--lives;
 				}else{
 					this.alive = false;
 				}
 			}
 		},
-		inv: 100,
+		inv: easy? 250: 100,
 		color: "#0af",
 		sk: 50,
 		draw() {
