@@ -5,9 +5,9 @@ var score = 0, lives = 3, added = 0, gameColor, pow = () => Math.ceil(Level / 10
 let game = function() {
 	gameColor = hardcore? "#f50": practice? "#fff" : easy? "#5f5": insane? "#700": player.color;
 	if(insane) {
-		if(time < 0) {
+		if(time <= 0) {
 			generateLevel();
-			time = 1000;
+			time = 1500;
 		}else time--
 	}else if(enemies.length == 0) if(time++ >= 50) generateLevel();
 	ctx.clear(`#0002`);
@@ -81,7 +81,7 @@ let game = function() {
 		ctx.lineTo(x + scale * i, scale);
 	}
 	if(insane) {
-		var txt = Math.floor(time / 10);
+		var txt = Math.floor(time / 150);
 		ctx.fillText(txt, (canvas.width - ctx.measureText(txt).width)/2, canvas.height - scale/4);
 	}
 	ctx.stroke();
@@ -141,8 +141,7 @@ let Player = function() {
 				ctx.moveTo(x + s/2, y + s/2);
 				ctx.lineTo(x + s/2 + Math.cos(rad) * 3 * scale, y + s/2 + Math.sin(rad) * 3 * scale);
 				ctx.stroke();
-			}
-			ctx.fillStyle = this.color;
+			} ctx.fillStyle = this.color;
 			ctx.beginPath();
 			ctx.square(x, y, s, s*2/5);
 			ctx.fill();
@@ -176,8 +175,7 @@ let Player = function() {
 					ctx.moveTo(x + Math.cos(4 * this.r/shot + r) * this.s * scale * 0.7, y + Math.sin(4 * this.r/shot + r) * this.s * scale * 0.7)
 					ctx.lineTo(x + Math.cos(4 * this.r/shot + r) * this.s * scale, y + Math.sin(4 * this.r/shot + r) * this.s * scale)
 				}
-				else
-					ctx.square(x + Math.cos(4 * this.r/shot + r) * this.s * scale - s/2, y + Math.sin(4 * this.r/shot + r) * this.s * scale - s/2, s, s/4)
+				else ctx.square(x + Math.cos(4 * this.r/shot + r) * this.s * scale - s/2, y + Math.sin(4 * this.r/shot + r) * this.s * scale - s/2, s, s/4)
 			ctx.stroke();
 		}
 	});

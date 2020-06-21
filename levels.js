@@ -53,7 +53,7 @@ let generateLevel = function() {
 			}
 		break;
 		case 9:
-			spawn(new PatrolBoss)
+			spawn(new PatrolBoss);
 		break;
 		default:
 			--Level;

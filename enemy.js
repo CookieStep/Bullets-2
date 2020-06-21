@@ -69,6 +69,7 @@ let spawn = function(what) {
 	if(what instanceof PatrolBoss) for(let a = 0; a < 4; a++) {
 		let child = new Enemy(Math.PI * a/2);
 		child.parent = what;
+		child.color = "#faa";
 		what.children.push(child);
 		child.x = what.x + (what.s - child.s)/2;
 		child.y = what.y + (what.s - child.s)/2;
@@ -211,7 +212,7 @@ let PatrolBoss = function() {
 	tip.text = "Patrol Boss";
 	tip.time = 100;
 	Object.assign(this, {
-		color: "#ff0",
+		color: "#f55",
 		xp: 1000,
 		s: 2,
 		goal: 0,
@@ -367,31 +368,11 @@ let PatrolBoss = function() {
 			ctx.beginPath();
 			var rad = radianTo(this, this.loc);
 			var acl = distance(this.velocity.x / this.spd, this.velocity.y / this.spd);
-			ctx.fillStyle = `#777`;
+			ctx.fillStyle = `#faa`;
 			x += Math.cos(rad) * s/5 * acl;
 			y += Math.sin(rad) * s/5 * acl;
 			ctx.square(x + s/4, y + s/4, s/2, s*1/5);
 			ctx.fill();
 		}
 	});
-};
-let PatrolBossFollow = function() {
-	WallFollow.call(this);
-	Object.assign(this, {
-		tick() {
-			var {s, r} = this.parent;
-			var {x, y} = this.parent.loc;
-			var rad = this.parent.r * 2;
-			rad += this.num * Math.PI / 2;
-			var dis = 4;
-			x = x + Math.cos(rad) * dis;
-			y = y + Math.sin(rad) * dis;
-			this.loc = {x, y, s};
-			var rad = radianTo(this, this.loc);
-			this.velocity.x += Math.cos(rad) * this.acl;
-			this.velocity.y += Math.sin(rad) * this.acl;
-		},
-		xp: 25,
-		color: "#955"
-	})
 };

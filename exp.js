@@ -53,8 +53,8 @@ let exp = function(what) {
         what.px /= 2;
         what.px += what.xp * 0.75;
         what.xp = 0;
-    } if(what.xp || what.px) for(var i = 0; i < 25; i++) {
-        var xp = new Exp(what.xp / 25, what.px / 25);
+    } if(what.xp || what.px) for(var i = 0; i < 10; i++) {
+        var xp = new Exp(what.xp / 10, what.px / 10);
         xp.x = what.x + (what.s - xp.s) / 2;
         xp.y = what.y + (what.s - xp.s) / 2;
         particles.push(xp);

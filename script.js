@@ -162,7 +162,7 @@ function menu() {
 					insane = true;
 					time = 0;
 				}
-					if(unlocked.sword) menu.active = 2;
+				if(unlocked.sword) menu.active = 2;
 				else menu.active = false;
 			break;
 			case 2:
