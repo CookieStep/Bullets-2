@@ -105,7 +105,7 @@ let Player = function() {
 				else this.shoot(Math.atan2(y, x));
 			}
 			this.sk += easy? 0.25: 0.1;
-			if(this.sk > easy? 2500: 625) this.sk = easy? 2500: 625;
+			if(this.sk > (easy? 2500: 625)) this.sk = easy? 2500: 625;
 		},
 		die() {
 			if(!this.inv && this.alive) {
