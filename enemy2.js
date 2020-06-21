@@ -132,7 +132,7 @@ let TPatrol = function() {
 				this.color = `rgb(${127.5 + (100 - this.goal)/8 * 2.55}, ${127.5 + (100 - this.goal)/8 * 2.55}, ${127.5 + (100 - this.goal)/8 * 2.55})`
 			}else{
 				this.goal = 50 + Math.floor(Math.random() * 51);
-				this.goal *= 4;
+				this.goal *= 2;
 				var dis = 5;
 				do{
 					this.x = Math.random() * (game.width - this.s);
@@ -150,3 +150,6 @@ let TPatrol = function() {
 		}
 	});
 };
+let BulletBomb = function() {
+	
+}
