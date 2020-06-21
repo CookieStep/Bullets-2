@@ -1,7 +1,7 @@
 var Level = 0;
 let generateLevel = function() {
 	switch(Level) {
-		case -1:
+		case 0:
 			for(var a = 0; a < 5; a++) {
 				spawn(new Enemy);
 				spawn(new Curve);
@@ -117,8 +117,7 @@ let generateLevel = function() {
 				spawn(new TPatrol);
 			}
 		break;
-		case 0:
-			spawn(new Bomber)
+		case 18:
 		break
 		default:
 			--Level;
