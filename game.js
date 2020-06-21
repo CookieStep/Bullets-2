@@ -105,7 +105,7 @@ let Player = function() {
 				if(player.sword) this.slice(Math.atan2(y, x));
 				else this.shoot(Math.atan2(y, x));
 			}
-			this.sk += 0.1;
+			this.sk += easy? 0.25: 0.1;
 		},
 		die() {
 			if(!this.inv && this.alive) {

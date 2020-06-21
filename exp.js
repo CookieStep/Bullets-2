@@ -26,7 +26,7 @@ let Exp = function(xp, px) {
         tick() {
             this.time--;
             this.r += rs;
-            if(distanceBetween(player, this) < 2 && player.alive) {
+            if(distanceBetween(player, this) < (easy? 4: 2) && player.alive) {
                 var rad = radianTo(this, player);
                 this.velocity.x += Math.cos(rad) * this.acl / 2;
                 this.velocity.y += Math.sin(rad) * this.acl / 2;
