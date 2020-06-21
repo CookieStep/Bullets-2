@@ -240,6 +240,7 @@ let PatrolBoss = function() {
 				}
 			}
 		},
+		phase: 0,
 		tick() {
 			var alive = false;
 			this.children.forEach((child) => {
@@ -257,8 +258,8 @@ let PatrolBoss = function() {
 					this.velocity.y += Math.sin(rad) * this.acl;
 					--this.goal;
 				}else{
-					this.goal = 75 + Math.floor(Math.random() * 26);
-					this.goal *= 4;
+					this.goal = 75 + Math.floor(Math.random() * 26) - (25 * this.phase);
+					this.goal *= 4 - (this.phase);
 					do{
 						var {x, y, s} = this;
 						x += Math.random() * 20 - 10;

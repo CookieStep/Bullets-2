@@ -34,13 +34,17 @@ let generateLevel = function() {
 			}
 		break;
 		case 6:
-			for(var i = 0; i < 10; i++) {
+			for(var i = 0; i < 5; i++) {
 				spawn(new Patrol);
+				spawn(new Patrol(true));
 			}
 		break;
 		case 7:
-			for(var i = 0; i < 10; i++) {
+			for(var i = 0; i < 4; i++) {
 				spawn(new Patrol(true));
+				if(i > 2) continue;
+				spawn(new Enemy);
+				spawn(new Curve);
 			}
 		break;
 		case 8: 

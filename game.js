@@ -7,7 +7,7 @@ let game = function() {
 	if(insane) {
 		if(time <= 0) {
 			generateLevel();
-			time = 1500;
+			time = Level % 10 == 0? 10000: 1500;
 		}else time--
 	}else if(enemies.length == 0) if(time++ >= 50) generateLevel();
 	ctx.clear(`#0002`);
@@ -62,7 +62,7 @@ let game = function() {
 	];
 	ctx.font = `${scale}px ${fonts[insane? 4: hardcore? 3: easy? 1: practice? 2: 0]}`;
 	var txt = insane? `Wave ${Level}`: `Level ${Level}`;
-	if(Level % 10 == 0) {
+	if(Level % 10 == 0 && !insane) {
 		txt = `Boss ${Level / 10}`;
 	}
 	ctx.fillText(txt, canvas.width - ctx.measureText(txt).width, scale);
@@ -81,7 +81,7 @@ let game = function() {
 		ctx.lineTo(x + scale * i, scale);
 	}
 	if(insane) {
-		var txt = Math.floor(time / 150);
+		var txt = Math.ceil(time / 150);
 		ctx.fillText(txt, (canvas.width - ctx.measureText(txt).width)/2, canvas.height - scale/4);
 	}
 	ctx.stroke();
@@ -146,8 +146,7 @@ let Player = function() {
 			ctx.square(x, y, s, s*2/5);
 			ctx.fill();
 			ctx.beginPath();
-			var tx = this.sk/2;
-			ctx.fillStyle = `hsl(${tx}, 100%, 70%)`;
+			ctx.fillStyle = gameColor;
 			ctx.square(x + s/4, y + s/4, s/2, s*1/5);
 			ctx.fill();
 			ctx.beginPath();
