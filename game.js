@@ -1,7 +1,7 @@
 let scale = 40;
 let distance = (x, y, x2=0, y2=0) => Math.sqrt(Math.pow(x - x2, 2) + Math.pow(y - y2, 2));
 var tip = {};
-var score = 0, lives = 3, added = 0, gameColor;
+var score = 0, lives = 3, added = 0, gameColor, pow = () => Math.ceil(Level / 10);
 let game = function() {
 	gameColor = hardcore? "#f50": practice? "#fff" : easy? "#5f5": player.color;
 	if(enemies.length == 0 && particles.length == 0) generateLevel();

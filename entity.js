@@ -22,9 +22,8 @@ let Entity = function() {
 			if(!this.lastShot) {
 				if(this instanceof Player) this.lastShot = easy? 10: 15;
 				else this.lastShot = easy? 150: 100;
-				rad = Math.floor(rad * 4/Math.PI) * Math.PI/4
 				if(this instanceof Player) var bullet = new Bullet(rad, this);
-				else var bullet = new EBullet(rad, this)
+				else var bullet = new EBullet(rad, this);
 				var x = this.x + (this.s - bullet.s)/2,
 					y = this.y + (this.s - bullet.s)/2;
 				x += Math.cos(rad); y += Math.sin(rad);
