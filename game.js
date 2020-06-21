@@ -21,10 +21,10 @@ let game = function() {
 		if(touch(player, particle) && player.alive) {
 			particle.die();
 			player.xp += particle.xp; player.px += particle.px;
-			var max = (easy? 50: 100) * Math.pow(2, added);
+			var max = (easy? 25: 50) * added + (easy? 10: 25) * Math.pow(1.2, added);
 			while(score + particle.xp > max) {
 				lives++; added++;
-				max = (easy? 50: 100) * Math.pow(2, added);
+				max = (easy? 25: 50) * added + (easy? 10: 25) * Math.pow(1.2, added);
 			} player.sk += particle.px + particle.xp; score += particle.xp;
 		}
 	}
@@ -105,6 +105,7 @@ let Player = function() {
 				else this.shoot(Math.atan2(y, x));
 			}
 			this.sk += easy? 0.25: 0.1;
+			if(this.sk > easy? 2500: 625) this.sk = easy? 2500: 625;
 		},
 		die() {
 			if(!this.inv && this.alive) {
