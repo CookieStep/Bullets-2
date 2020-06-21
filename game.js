@@ -49,7 +49,6 @@ let game = function() {
 	ctx.fillStyle = gameColor;
 	ctx.strokeStyle = gameColor;
 	var fonts = [
-		"Georgia",
 		"Arial",
 		"Lucida Console",
 		"Comic Sans MS",
