@@ -1,9 +1,11 @@
 const canvas = document.createElement("canvas"), ctx = canvas.getContext("2d");
 let saveData = localStorage;
+if(!saveData.highscore) saveData.highscore = 0;
 let unlocked = {
 	sword: saveData.sword == "true",
 	reversed: saveData.reversed == "true",
-	checkpoint: Number(saveData.checkpoint)
+	checkpoint: Number(saveData.checkpoint),
+	highscore: Number(saveData.highscore)
 };
 addEventListener("load", function() {
 	var {body, documentElement} = document;
@@ -51,7 +53,8 @@ function menu() {
 				"#fff",
 				"#f50",
 				"#700",
-				"#fff"
+				"#fff",
+				"#ff5"
 			];
 			var fonts = [
 				"Georgia",
@@ -107,11 +110,12 @@ function menu() {
 		break;
 	}
 	options[options.length - 1] = options[options.length - 1][menu.selected]
+	if(unlocked.highscore) options.push(`Highscore: ${unlocked.highscore}`);
 	fonts.push(fonts[menu.selected]);
 	colors.push(colors[menu.selected]);
 	var h = canvas.height / options.length;
 	ctx.clear("#000");
-	for(var opt = 1; opt < options.length - 1; opt++) {
+	for(var opt = 1; opt < options.length - (unlocked.highscore? 2: 1); opt++) {
 		ctx.beginPath();
 		ctx.rect(canvas.width / 4, h * opt, canvas.width/2, h, canvas.height/16);
 		ctx.strokeStyle = colors[opt];
@@ -135,8 +139,8 @@ function menu() {
 		keys.ArrowUp = 2;
 		menu.selected--;
 	}
-	if(menu.selected < 1) menu.selected += options.length - 2;
-	menu.selected = ((menu.selected - 1) % (options.length - 2)) + 1;
+	if(menu.selected < 1) menu.selected += options.length - (unlocked.highscore? 3: 2);
+	menu.selected = ((menu.selected - 1) % (options.length - (unlocked.highscore? 3: 2))) + 1;
 	if(keys.Backspace == 1 || keys.Escape == 1) {
 		if(keys.Backspace) keys.Backspace = 2;
 		if(keys.Escape) keys.Escape = 2;

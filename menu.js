@@ -2,7 +2,8 @@ let pause = function() {
 	game(false);
 	var options = [
 		"Main menu",
-		`Reverse keys: ${reversed? "yes": "no"}`
+		`Reverse keys: ${reversed? "yes": "no"}`,
+		`Highscore: ${Math.round(unlocked.highscore)}`
 	]
 	var h = canvas.height / (options.length + 2)
 	ctx.beginPath();
@@ -14,7 +15,7 @@ let pause = function() {
 		ctx.fillText(options[opt], (canvas.width - ctx.measureText(options[opt]).width)/2, h * opt + h * 8/5);
 	}
 	ctx.beginPath();
-	ctx.rect(canvas.width / 4, h * (pause.selected + 1), canvas.width/2, h, h/8);
+	ctx.rect(canvas.width / 4, h * (pause.selected + 1), canvas.width/2, h, (h * options.length) / 4);
 	ctx.strokeStyle = "#000";
 	ctx.stroke();
 	if(keys.ArrowDown == 1) {
@@ -35,9 +36,11 @@ let pause = function() {
 		if(keys[" "]) keys[" "] = 2;
 		if(keys.Enter) keys.Enter = 2;
 		if(pause.selected == 0) {
-			player = new Player
+			player = new Player;
 			Level = 0;
+			tip = {};
 			score = 0;
+			high = true;
 			enemies = [];
 			particles = [];
 			hardcore = false;

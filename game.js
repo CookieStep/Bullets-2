@@ -1,6 +1,6 @@
 let scale = 40;
 let distance = (x, y, x2=0, y2=0) => Math.sqrt(Math.pow(x - x2, 2) + Math.pow(y - y2, 2));
-var tip = {}, time = 50;
+var tip = {}, time = 50, high = true;
 var score = 0, lives = 3, added = 0, gameColor, pow = () => Math.ceil(Level / 10);
 let game = function(update=true) {
 	if(update) {
@@ -32,10 +32,22 @@ let game = function(update=true) {
 				particle.die();
 				player.xp += particle.xp; player.px += particle.px;
 				var max = (easy? 50: 100) * added + (easy? 10: 25) * Math.pow(1.2, added);
+				if(score + particle.xp > unlocked.highscore && !practice) {
+					if(high) {
+						if(unlocked.higscore > 0) {
+							tip.text = "New Highscore: " + Math.round(score);
+							tip.time = 100;
+						}
+						high = false;
+					}
+					unlocked.highscore = score;
+					saveData.highscore = score;
+				}
 				while(score + particle.xp > max) {
 					lives++; added++;
 					max = (easy? 50: 100) * added + (easy? 10: 25) * Math.pow(1.2, added);
-				} player.sk += (particle.px)/(pow() * pow()) + (particle.xp) / pow(); score += particle.xp;
+				} player.sk += (particle.px)/(pow() * pow()) + (particle.xp) / pow();
+				score += particle.xp * (easy? 0.5: 1);
 			}
 		}
 		for(let enemy of enemies) {
@@ -130,6 +142,13 @@ let Player = function() {
 					this.inv = easy? 250: 100;
 					--lives;
 				}else{
+					score += (easy? 50: 100) * lives + (easy? 10: 25) * Math.pow(1.2, lives);
+					if(score > unlocked.highscore) {
+						unlocked.highscore = score;
+						saveData.highcore = score;
+					}
+					tip.time = Infinity;
+					tip.text = `Final Score: ${Math.round(score)}`;
 					this.alive = false;
 				}
 			}
