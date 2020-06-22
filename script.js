@@ -166,6 +166,7 @@ function menu() {
 					insane = true;
 					time = 0;
 				}
+				player.sk = 50;
 				if(unlocked.sword) menu.active = 2;
 				else menu.active = false;
 			break;
