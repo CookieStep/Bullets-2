@@ -1,46 +1,48 @@
 let scale = 40;
 let distance = (x, y, x2=0, y2=0) => Math.sqrt(Math.pow(x - x2, 2) + Math.pow(y - y2, 2));
-var tip = {}, time = 500;
+var tip = {}, time = 50;
 var score = 0, lives = 3, added = 0, gameColor, pow = () => Math.ceil(Level / 10);
-let game = function() {
-	gameColor = hardcore? "#f50": practice? "#fff" : easy? "#5f5": insane? "#700": player.color;
-	if(insane) {
-		if(time <= 0) {
-			generateLevel();
-			time = Level % 10 == 0? 10000: 1500;
-		}else time--
-	}else if(enemies.length == 0) if(time++ >= 50) generateLevel();
+let game = function(update=true) {
+	if(update) {
+		gameColor = hardcore? "#f50": practice? "#fff" : easy? "#5f5": insane? "#700": player.color;
+		if(insane) {
+			if(time <= 0) {
+				generateLevel();
+				time = Level % 10 == 0? 7500: 1500;
+			}else time--
+		}else if(enemies.length == 0) if(time++ >= 50) generateLevel();
+		particles = particles.filter((particle) => particle.time > 0);
+		bullets = bullets.filter((bullet) => bullet.time > 0);
+		enemies = enemies.filter((enemy) => enemy.alive);
+		for(let bullet of bullets) {
+			bullet.update();
+			for(let enemy of enemies) if(touch(bullet, enemy)) {
+				enemy.die();
+				bullet.die();
+			};
+		}
+		for(let particle of particles) {
+			particle.update();
+			if(touch(player, particle) && player.alive) {
+				particle.die();
+				player.xp += particle.xp; player.px += particle.px;
+				var max = (easy? 50: 100) * added + (easy? 10: 25) * Math.pow(1.2, added);
+				while(score + particle.xp > max) {
+					lives++; added++;
+					max = (easy? 50: 100) * added + (easy? 10: 25) * Math.pow(1.2, added);
+				} player.sk += (particle.px)/(pow() * pow()) + (particle.xp) / pow(); score += particle.xp;
+			}
+		}
+		for(let enemy of enemies) {
+			enemy.update();
+			if(touch(enemy, player) && player.alive) {
+				enemy.die();
+				player.die();
+			}
+		}
+		if(player.alive) player.update();
+	}
 	ctx.clear(`#0002`);
-	particles = particles.filter((particle) => particle.time > 0);
-	bullets = bullets.filter((bullet) => bullet.time > 0);
-	enemies = enemies.filter((enemy) => enemy.alive);
-	for(let bullet of bullets) {
-		bullet.update();
-		for(let enemy of enemies) if(touch(bullet, enemy)) {
-			enemy.die();
-			bullet.die();
-		};
-	}
-	for(let particle of particles) {
-		particle.update();
-		if(touch(player, particle) && player.alive) {
-			particle.die();
-			player.xp += particle.xp; player.px += particle.px;
-			var max = (easy? 50: 100) * added + (easy? 10: 25) * Math.pow(1.2, added);
-			while(score + particle.xp > max) {
-				lives++; added++;
-				max = (easy? 50: 100) * added + (easy? 10: 25) * Math.pow(1.2, added);
-			} player.sk += (particle.px)/(pow() * pow()) + (particle.xp) / pow(); score += particle.xp;
-		}
-	}
-	for(let enemy of enemies) {
-		enemy.update();
-		if(touch(enemy, player) && player.alive) {
-			enemy.die();
-			player.die();
-		}
-	}
-	if(player.alive) player.update();
 	for(let particle of particles) particle.draw();
 	for(let enemy of enemies) enemy.draw();
 	for(let bullet of bullets) bullet.draw();
@@ -85,7 +87,7 @@ let game = function() {
 		ctx.fillText(txt, (canvas.width - ctx.measureText(txt).width)/2, canvas.height - scale/4);
 	}
 	ctx.stroke();
-	if(tip.time) {
+	if(tip.time && update) {
 		tip.time--;
 		ctx.fillText(tip.text, (canvas.width - ctx.measureText(tip.text).width)/2, (canvas.height - scale)/2);
 	}
@@ -112,6 +114,11 @@ let Player = function() {
 			}
 			this.sk += easy? 0.25: 0.1;
 			if(this.sk > (easy? 2500: 625) * pow()) this.sk = (easy? 2500: 625) * pow();
+			if(keys.Esc == 1 || keys.Backspace == 1) {
+				if(keys.Esc) keys.Esc = 2;
+				if(keys.Backspace) keys.Backspace = 2;
+				pause.active = true;
+			}
 		},
 		die() {
 			if(!this.inv && this.alive) {
@@ -173,8 +180,7 @@ let Player = function() {
 				if(player.sword) {
 					ctx.moveTo(x + Math.cos(4 * this.r/shot + r) * this.s * scale * 0.7, y + Math.sin(4 * this.r/shot + r) * this.s * scale * 0.7)
 					ctx.lineTo(x + Math.cos(4 * this.r/shot + r) * this.s * scale, y + Math.sin(4 * this.r/shot + r) * this.s * scale)
-				}
-				else ctx.square(x + Math.cos(4 * this.r/shot + r) * this.s * scale - s/2, y + Math.sin(4 * this.r/shot + r) * this.s * scale - s/2, s, s/4)
+				}else ctx.square(x + Math.cos(4 * this.r/shot + r) * this.s * scale - s/2, y + Math.sin(4 * this.r/shot + r) * this.s * scale - s/2, s, s/4)
 			ctx.stroke();
 		}
 	});

@@ -1,7 +1,9 @@
 const canvas = document.createElement("canvas"), ctx = canvas.getContext("2d");
 let saveData = localStorage;
+if(!saveData.reversed) saveData.reversed = false;
 let unlocked = {
 	sword: Boolean(saveData.sword),
+	reversed: Boolean(saveData.reversed),
 	checkpoint: Number(saveData.checkpoint)
 };
 addEventListener("load", function() {
@@ -16,10 +18,12 @@ addEventListener("load", function() {
 	player.x = (game.width - player.s)/2;
 	player.y = (game.height - player.s)/2;
 	document.title = "Bullets 2";
+	if(unlocked.reversed) reversed = true;
 	update();
 });
 function update() {
 	if(menu.active) menu();
+	else if(pause.active) pause();
 	else game();
 	requestAnimationFrame(update);
 }
@@ -180,9 +184,38 @@ function menu() {
 menu.active = 1;
 menu.selected = 1;
 let keys = {};
+let bind = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "w", "a", "s", "d", "W", "A", "S", "D"];
 addEventListener("keydown", function(e) {
-	keys[e.key] = 1;
+	if(bind.includes(e.key)) {
+		var up = ["W", "A", "S", "D"];
+		var down = ["w", "a", "s", "d"];
+		var arrows = ["ArrowUp", "ArrowLeft", "ArrowDown", "ArrowRight"];
+		var key = e.key;
+		if(up.includes(key)) {
+			key = down[up.indexOf(key)];
+		} if(reversed) {
+			if(arrows.includes(key)) key = down[arrows.indexOf(key)];
+			else key = arrows[down.indexOf(key)];
+		}
+		keys[key] = 1;
+	}else{
+		keys[e.key] = 1;
+	}
 });
 addEventListener("keyup", function(e) {
-	delete keys[e.key];
+	if(bind.includes(e.key)) {
+		var up = ["W", "A", "S", "D"];
+		var down = ["w", "a", "s", "d"];
+		var arrows = ["ArrowUp", "ArrowLeft", "ArrowDown", "ArrowRight"];
+		var key = e.key;
+		if(up.includes(key)) {
+			key = down[up.indexOf(key)];
+		} if(reversed) {
+			if(arrows.includes(key)) key = down[arrows.indexOf(key)];
+			else key = arrows[down.indexOf(key)];
+		}
+		delete keys[key];
+	}else{
+		delete keys[e.key];
+	}
 });

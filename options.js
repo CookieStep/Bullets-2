@@ -8,3 +8,5 @@ var practice = false;
 var easy = false;
 //The true test
 var insane = false;
+//Swap wasd and Arrow keys
+var reversed = false;

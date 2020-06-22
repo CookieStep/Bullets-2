@@ -208,3 +208,42 @@ let Bomber = function() {
 		}
 	});
 };
+let Swerve = function(rad=(Math.PI * 2 * Math.random())) {
+	Entity.call(this);
+	var bias = Math.random() * 10;
+	Object.assign(this, {
+		color: "#077",
+		velocity: {x: Math.cos(rad) * this.acl, y: Math.sin(rad) * this.acl},
+		xp: 25,
+		draw() {
+			var {x, y, s} = this;
+			rad = Math.atan2(this.velocity.y, this.velocity.x);
+            x *= scale; y *= scale; s *= scale;
+            x += s/2;
+            y += s/2;
+			ctx.fillStyle = this.color;
+            ctx.beginPath();
+			ctx.arc(x, y, s/2, 0, Math.PI * 2);
+			ctx.fill();
+			ctx.beginPath();
+			s /= Math.sin(Math.PI/4) * 2;
+			this.r = rad + Math.PI/4;
+			var a = Math.cos(this.r) * s, b = Math.sin(this.r) * s;
+			s *= Math.sin(Math.PI/4) * 2;
+			ctx.moveTo(x - a, y - b);
+			ctx.lineTo(x + Math.cos(rad - Math.PI/2) * s/2, y + Math.sin(rad - Math.PI/2) * s/2);
+			ctx.lineTo(x - Math.cos(rad - Math.PI/2) * s/2, y - Math.sin(rad - Math.PI/2) * s/2);
+			ctx.lineTo(x - b, y + a);
+			ctx.fill();
+		},
+		tick() {
+			rad = Math.atan2(this.velocity.y, this.velocity.x);
+			rad += (Math.random() + bias/5) * Math.PI / 6;
+			bias += Math.random() * 2 - 1;
+			if(bias > 5) bias = 5;
+			if(bias < -5) bias = -5;
+			this.velocity.x += Math.cos(rad) * this.acl;
+			this.velocity.y += Math.sin(rad) * this.acl;
+		}
+	});
+};

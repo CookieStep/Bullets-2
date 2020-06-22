@@ -59,6 +59,12 @@ let generateLevel = function() {
 		case 9:
 			spawn(new PatrolBoss);
 		break;
+		case 10:
+			for(var a = 0; a < 5; a++) {
+				spawn(new Swerve);
+				spawn(new Patrol(true));
+			}
+		break;
 		default:
 			--Level;
 		break;
