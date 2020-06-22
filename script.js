@@ -110,7 +110,7 @@ function menu() {
 		break;
 	}
 	options[options.length - 1] = options[options.length - 1][menu.selected]
-	if(unlocked.highscore) options.push(`Highscore: ${unlocked.highscore}`);
+	if(unlocked.highscore && menu.active == 1) options.push(`Highscore: ${unlocked.highscore}`);
 	fonts.push(fonts[menu.selected]);
 	colors.push(colors[menu.selected]);
 	var h = canvas.height / options.length;
