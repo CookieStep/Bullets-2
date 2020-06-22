@@ -41,7 +41,7 @@ let game = function(update=true) {
 						high = false;
 					}
 					unlocked.highscore = score;
-					saveData.highscore = score;
+					saveData.highscore = Math.round(score);
 				}
 				while(score + particle.xp > max) {
 					lives++; added++;
@@ -145,7 +145,7 @@ let Player = function() {
 					score += (easy? 50: 100) * lives + (easy? 10: 25) * Math.pow(1.2, lives);
 					if(score > unlocked.highscore) {
 						unlocked.highscore = score;
-						saveData.highcore = score;
+						saveData.highcore = Math.round(score);
 					}
 					tip.time = Infinity;
 					tip.text = `Final Score: ${Math.round(score)}`;

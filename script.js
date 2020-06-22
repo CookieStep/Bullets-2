@@ -108,14 +108,14 @@ function menu() {
 			"Arial"
 		];
 		break;
-	}
-	options[options.length - 1] = options[options.length - 1][menu.selected]
-	if(unlocked.highscore && menu.active == 1) options.push(`Highscore: ${unlocked.highscore}`);
+	} options[options.length - 1] = options[options.length - 1][menu.selected];
+	var highscore = unlocked.highscore && menu.active == 1
+	if(highscore) options.push(`Highscore: ${unlocked.highscore}`);
 	fonts.push(fonts[menu.selected]);
 	colors.push(colors[menu.selected]);
 	var h = canvas.height / options.length;
 	ctx.clear("#000");
-	for(var opt = 1; opt < options.length - (unlocked.highscore? 2: 1); opt++) {
+	for(var opt = 1; opt < options.length - (highscore? 2: 1); opt++) {
 		ctx.beginPath();
 		ctx.rect(canvas.width / 4, h * opt, canvas.width/2, h, canvas.height/16);
 		ctx.strokeStyle = colors[opt];
@@ -139,8 +139,8 @@ function menu() {
 		keys.ArrowUp = 2;
 		menu.selected--;
 	}
-	if(menu.selected < 1) menu.selected += options.length - (unlocked.highscore? 3: 2);
-	menu.selected = ((menu.selected - 1) % (options.length - (unlocked.highscore? 3: 2))) + 1;
+	if(menu.selected < 1) menu.selected += options.length - (highscore? 3: 2);
+	menu.selected = ((menu.selected - 1) % (options.length - (highscore? 3: 2))) + 1;
 	if(keys.Backspace == 1 || keys.Escape == 1) {
 		if(keys.Backspace) keys.Backspace = 2;
 		if(keys.Escape) keys.Escape = 2;
