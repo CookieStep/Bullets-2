@@ -1,6 +1,5 @@
 const canvas = document.createElement("canvas"), ctx = canvas.getContext("2d");
 let saveData = localStorage;
-if(!saveData.reversed) saveData.reversed = false;
 let unlocked = {
 	sword: Boolean(saveData.sword),
 	reversed: Boolean(saveData.reversed),
