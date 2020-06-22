@@ -4,6 +4,11 @@ var tip = {}, time = 50;
 var score = 0, lives = 3, added = 0, gameColor, pow = () => Math.ceil(Level / 10);
 let game = function(update=true) {
 	if(update) {
+		if(keys.Esc == 1 || keys.Backspace == 1) {
+			if(keys.Esc) keys.Esc = 2;
+			if(keys.Backspace) keys.Backspace = 2;
+			pause.active = true;
+		}
 		gameColor = hardcore? "#f50": practice? "#fff" : easy? "#5f5": insane? "#700": player.color;
 		if(insane) {
 			if(time <= 0) {
@@ -114,11 +119,6 @@ let Player = function() {
 			}
 			this.sk += easy? 0.25: 0.1;
 			if(this.sk > (easy? 2500: 625) * pow()) this.sk = (easy? 2500: 625) * pow();
-			if(keys.Esc == 1 || keys.Backspace == 1) {
-				if(keys.Esc) keys.Esc = 2;
-				if(keys.Backspace) keys.Backspace = 2;
-				pause.active = true;
-			}
 		},
 		die() {
 			if(!this.inv && this.alive) {
