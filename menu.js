@@ -2,20 +2,28 @@ let pause = function() {
 	game(false);
 	var options = [
 		"Main menu",
-		`Reverse keys: ${reversed? "yes": "no"}`,
-		`Highscore: ${Math.round(unlocked.highscore)}`
+		reversed? "Keys reversed": "Reverse keys",
+		`Highscore: ${Math.round(unlocked.highscore)}`,
+		"Unlockables"
 	]
+	if(pause.active == 2) {
+		options = [
+			`Checkpoints: ${unlocked.checkpoint}`,
+			`Sword: ${unlocked.sword? "yes": "no"}`,
+			`Sword Powerup: ${unlocked.sworp? "yes": "no"}`
+		];
+	}
 	var h = canvas.height / (options.length + 2)
 	ctx.beginPath();
 	ctx.fillStyle = gameColor;
-	ctx.rect(canvas.width/4, h, canvas.width/2, h * options.length, (h * options.length) / 4);
+	ctx.rect(canvas.width/4, h, canvas.width/2, h * options.length, h/2);
 	ctx.fill();
 	for(var opt = 0; opt < options.length; opt++) {
-		ctx.fillStyle = "#555";
+		ctx.fillStyle = "#000";
 		ctx.fillText(options[opt], (canvas.width - ctx.measureText(options[opt]).width)/2, h * opt + h * 8/5);
 	}
 	ctx.beginPath();
-	ctx.rect(canvas.width / 4, h * (pause.selected + 1), canvas.width/2, h, (h * options.length) / 4);
+	ctx.rect(canvas.width / 4, h * (pause.selected + 1), canvas.width/2, h, h/2);
 	ctx.strokeStyle = "#000";
 	ctx.stroke();
 	if(keys.ArrowDown == 1) {
@@ -35,30 +43,38 @@ let pause = function() {
 	if(keys[" "] == 1 || keys.Enter == 1) {
 		if(keys[" "]) keys[" "] = 2;
 		if(keys.Enter) keys.Enter = 2;
-		if(pause.selected == 0) {
-			player = new Player;
-			Level = 0;
-			tip = {};
-			score = 0;
-			high = true;
-			enemies = [];
-			particles = [];
-			hardcore = false;
-			easy = false;
-			practice = false;
-			insane = false;
-			menu.active = 1;
-			pause.active = false;
-			player.x = (game.width - player.s)/2;
-			player.y = (game.height - player.s)/2;
-			time = 50;
-			lives = 3;
-			added = 0;
-		}
-		if(pause.selected == 1) {
-			reversed = !reversed;
-			saveData.reversed = reversed;
-			unlocked.reversed = reversed;
+		if(pause.active == true) {
+			if(pause.selected == 0) {
+				player = new Player;
+				Level = 0;
+				tip = {};
+				score = 0;
+				high = true;
+				enemies = [];
+				particles = [];
+				hardcore = false;
+				impossible = false;
+				easy = false;
+				practice = false;
+				insane = false;
+				menu.active = 1;
+				pause.active = false;
+				player.x = (game.width - player.s)/2;
+				player.y = (game.height - player.s)/2;
+				time = 50;
+				lives = 3;
+				added = 0;
+			}
+			if(pause.selected == 1) {
+				reversed = !reversed;
+				saveData.reversed = reversed;
+				unlocked.reversed = reversed;
+			}
+			if(pause.selected == 3) {
+				pause.active = 2;
+			}
+		}else{
+			pause.active = true;
 		}
 	}
 };

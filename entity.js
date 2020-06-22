@@ -18,16 +18,24 @@ let Entity = function() {
 		},
 		tick() {},
 		lastShot : 0,
+		sp: 1,
 		shoot(rad) {
 			if(!this.lastShot) {
 				if(this instanceof Player) this.lastShot = easy? 10: 15;
 				else this.lastShot = easy? 150: 100;
-				if(this instanceof Player) var bullet = new Bullet(rad, this);
-				else var bullet = new EBullet(rad, this);
-				var x = this.x + (this.s - bullet.s)/2,
-					y = this.y + (this.s - bullet.s)/2;
-				x += Math.cos(rad); y += Math.sin(rad);
-				Object.assign(bullet, {x, y});
+				for(let i = 0; i < this.sp; i++) {
+					//Math.PI
+					//rad
+					//rad - Math.PI/4
+					//rad + Math.PI/4
+					if(this instanceof Player) var bullet = new Bullet(rad + (i - (this.sp - 1)/2) * Math.PI/(this.sp + 1)/2, this);
+					else var bullet = new EBullet(rad, this);
+					var x = this.x + (this.s - bullet.s)/2,
+						y = this.y + (this.s - bullet.s)/2;
+					x += Math.cos(rad); y += Math.sin(rad);
+					bullet.time /= Math.sqrt(this.sp);
+					Object.assign(bullet, {x, y});
+				}
 				this.sk -= (easy? 15: 25);
 			}
 		},
@@ -43,7 +51,7 @@ let Entity = function() {
 		slash() {
 			if(this instanceof Player) {
 				var rad = this.swingRad + (Math.PI/2 * ((easy? 15: 25) - this.lastSwing)/(easy? 15: 25))
-				for(var i = 3/4; i < 3; i += 1/4) {
+				for(var i = 3/4; i < 2 + (this.sp - 1)/2;i += 1/4) {
 					var tip = {x: this.x + this.s * 3/8, y: this.y + this.s * 3/8, s: this.s/4}
 					tip.x += Math.cos(rad) * i;
 					tip.y += Math.sin(rad) * i;

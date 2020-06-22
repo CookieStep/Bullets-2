@@ -113,7 +113,7 @@ let Patrol = function(spaz) {
 			ctx.fill();
 			ctx.beginPath()
 			var rad = radianTo(this, this.loc);
-			var acl = distanceBetween(this, this.loc) / distance(3, 3);
+			var acl = distanceBetween(this, this.loc) / distance(4, 4);
 			ctx.fillStyle = `#777`;
 			x += Math.cos(rad) * s/5 * acl;
 			y += Math.sin(rad) * s/5 * acl;
@@ -223,20 +223,23 @@ let PatrolBoss = function() {
 				this.alive = false;
 				if(this.exp) exp(this);
 				else this.time = -1;
+				var unlocks = [];
 				if(!practice && !unlocked.sword) {
+					unlocks.push("Skill");
+					unlocked.sword = true;
 					saveData.sword = true;
-					if(hardcore && !unlocked.checkpoint) {
-						tip.text = "New Checkpoint, Skill Unlocked";
-						tip.time = 250;
-						saveData.checkpoint = 1;
-					}else{
-						tip.text = "New Skill Unlocked";
-						tip.time = 250;
-					}
-				}else if(hardcore && !unlocked.checkpoint) {
-					tip.text = "New Checkpoint Unlocked";
-					tip.time = 250;
+				} if(hardcore && !unlocked.checkpoint) {
+					unlocks.push("Checkpoint");
+					unlocked.checkpoint = 1;
 					saveData.checkpoint = 1;
+				} if(insane && !unlocked.sworp) {
+					unlocks.push("Powerup")
+					unlocked.sworp = true;
+					saveData.sworp = true;
+				}
+				if(unlocks.length) {
+					tip.time = 100;
+					tip.text = `New ${unlocks} Unlocked`
 				}
 			}
 		},
@@ -374,6 +377,37 @@ let PatrolBoss = function() {
 			y += Math.sin(rad) * s/5 * acl;
 			ctx.square(x + s/4, y + s/4, s/2, s*1/5);
 			ctx.fill();
+		}
+	});
+};
+let Switch = function(parent) {
+	Entity.call(this);
+	var rad = Math.random() * 2 * Math.PI
+	Object.assign(this, {
+		color: "#770",
+		velocity: {x: Math.cos(rad) * this.acl, y: Math.sin(rad) * this.acl},
+		time: 0,
+		xp: 10,
+		draw() {
+			var {x, y, s} = this;
+			x *= scale; y *= scale; s *= scale;
+			ctx.fillStyle = `rgb(170, ${(100 - this.time)/100 * 255}, 170)`;
+			ctx.beginPath();
+			ctx.square(x, y, s, s/2);
+			ctx.fill();
+		},
+		tick() {
+			if(parent) if(!parent.alive) parent.tick();
+			if(this.time) this.time--;
+			else{
+				rad = Math.PI * 2 * Math.random()
+				if(parent) this.time = parent.time;
+				else this.time = 50 + Math.floor(Math.random() * 51)
+				Object.assign(this.velocity, {x: Math.cos(rad) * this.acl, y: Math.sin(rad) * this.acl})
+			}
+			rad = Math.atan2(this.velocity.y, this.velocity.x);
+			this.velocity.x += Math.cos(rad) * this.acl;
+			this.velocity.y += Math.sin(rad) * this.acl;
 		}
 	});
 };

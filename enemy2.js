@@ -247,3 +247,50 @@ let Swerve = function(rad=(Math.PI * 2 * Math.random())) {
 		}
 	});
 };
+let Scout = function(spaz) {
+	Entity.call(this);
+	Object.assign(this, {
+		color: "#aaa",
+		xp: 25,
+		goal: 0,
+		tick() {
+			if(this.goal) {
+				var rad = radianTo(this, this.loc);
+				var {x, y, s} = this;
+				x += this.velocity.x; y += this.velocity.y;
+				var acl = distanceBetween({x, y, s}, this.loc);
+				if(acl > this.acl) acl = this.acl;
+				this.velocity.x += Math.cos(rad) * this.acl;
+				this.velocity.y += Math.sin(rad) * this.acl;
+				--this.goal;
+			}else{
+				this.goal = 75 + Math.floor(Math.random() * 26);
+				if(spaz) this.goal -= 75
+				if(player.alive) {
+					var {x, y, s} = player
+				}else do{
+					var {x, y, s} = this;
+					x += Math.random() * 10 - 5;
+					y += Math.random() * 10 - 5;
+				}while(x < 0 || y < 0 || x > game.width - this.s || y > game.height - this.s)
+				this.loc = {x, y, s};
+			}
+		},
+		draw() {
+			var {x, y, s} = this
+			x *= scale; y *= scale; s *= scale;
+			ctx.fillStyle = this.color;
+			ctx.beginPath();
+			ctx.square(x, y, s, s*2/5);
+			ctx.fill();
+			ctx.beginPath()
+			var rad = radianTo(this, this.loc);
+			var acl = distanceBetween(this, this.loc) / distance(game.width, game.height);
+			ctx.fillStyle = `#777`;
+			x += Math.cos(rad) * s/5 * acl;
+			y += Math.sin(rad) * s/5 * acl;
+			ctx.square(x + s/4, y + s/4, s/2, s*1/5);
+			ctx.fill();
+		}
+	});
+};

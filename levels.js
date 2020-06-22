@@ -70,7 +70,52 @@ let generateLevel = function() {
 				spawn(new Swerve);
 				if(a > 2) continue;
 				spawn(new Patrol(true));
-				spawn(new );
+				spawn(new Enemy);
+			}
+		break;
+		case 12:
+			for(var a = 0; a < 5; a++) {
+				spawn(new Swerve);
+				spawn(new Switch);
+			}
+		break;
+		case 13:
+			for(var a = 0; a < 5; a++) {
+				spawn(new Switch);
+				spawn(new Enemy);
+			}
+		break;
+		case 14:
+			let s = new Switch;
+			spawn(s);
+			for(var a = 0; a < 9; a++) {
+				spawn(new Switch(s));
+			}
+		break;
+		case 15:
+			for(var a = 0; a < 5; a++) {
+				spawn(new Switch);
+				spawn(new Dash);
+			}
+		break;
+		case 16:
+			for(var a = 0; a < 10; a++) {
+				spawn(new Dash);
+			}
+		break;
+		case 17:
+			for(var a = 0; a < 5; a++) {
+				spawn(new Scout);
+				spawn(new Dash);
+			}
+		break;
+		case 18:
+			for(var i = 0; i < 2; i++) {
+				spawn(new Enemy);
+				spawn(new Scout);
+				spawn(new Switch);
+				spawn(new Dash);
+				spawn(new Swerve);
 			}
 		break;
 		default:

@@ -10,3 +10,5 @@ var easy = false;
 var insane = false;
 //Swap wasd and Arrow keys
 var reversed = false;
+//Litterally no way this is possible
+var impossible = false;

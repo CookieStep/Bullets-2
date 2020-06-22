@@ -9,11 +9,11 @@ let game = function(update=true) {
 			if(keys.Backspace) keys.Backspace = 2;
 			pause.active = true;
 		}
-		gameColor = hardcore? "#f50": practice? "#fff" : easy? "#5f5": insane? "#700": player.color;
-		if(insane) {
+		gameColor = impossible? "#555": hardcore? "#f50": practice? "#fff" : easy? "#5f5": insane? "#700": player.color;
+		if(insane && player.alive) {
 			if(time <= 0) {
 				generateLevel();
-				time = Level % 10 == 0? 7500: 1500;
+				time = Level % 10 == 0? (impossible? 7500: 3750): 1500;
 			}else time--
 		}else if(enemies.length == 0) if(time++ >= 50) generateLevel();
 		particles = particles.filter((particle) => particle.time > 0);
@@ -40,7 +40,7 @@ let game = function(update=true) {
 						}
 						high = false;
 					}
-					unlocked.highscore = score;
+					unlocked.highscore = Math.round(score);
 					saveData.highscore = Math.round(score);
 				}
 				while(score + particle.xp > max) {
@@ -77,9 +77,10 @@ let game = function(update=true) {
 		"Courier New",
 		"Comic Sans MS",
 		"Sans",
-		"Lucida Console"
+		"Lucida Console",
+		"Impact"
 	];
-	ctx.font = `${scale}px ${fonts[insane? 4: hardcore? 3: easy? 1: practice? 2: 0]}`;
+	ctx.font = `${scale}px ${fonts[impossible? 5: insane? 4: hardcore? 3: easy? 1: practice? 2: 0]}`;
 	var txt = insane? `Wave ${Level}`: `Level ${Level}`;
 	if(Level % 10 == 0 && !insane) {
 		txt = `Boss ${Level / 10}`;
@@ -130,7 +131,8 @@ let Player = function() {
 				else this.shoot(Math.atan2(y, x));
 			}
 			this.sk += easy? 0.25: 0.1;
-			if(this.sk > (easy? 2500: 625) * pow()) this.sk = (easy? 2500: 625) * pow();
+			if(this.sk > (easy? 2500: 625)) this.sk = (easy? 2500: 625);
+			if(this.sp > (easy? 13: 7)) this.sp = (easy? 13: 7);
 		},
 		die() {
 			if(!this.inv && this.alive) {
@@ -139,13 +141,14 @@ let Player = function() {
 					this.x = game.width / 2;
 					this.y = game.height / 2;
 					this.sk = 50;
+					this.sp = 1;
 					this.inv = easy? 250: 100;
 					--lives;
 				}else{
 					score += (easy? 50: 100) * lives + (easy? 10: 25) * Math.pow(1.2, lives);
 					if(score > unlocked.highscore) {
-						unlocked.highscore = score;
-						saveData.highcore = Math.round(score);
+						unlocked.highscore = Math.round(score);
+						saveData.highscore = Math.round(score);
 					}
 					tip.time = Infinity;
 					tip.text = `Final Score: ${Math.round(score)}`;
@@ -165,14 +168,14 @@ let Player = function() {
 				ctx.strokeStyle = "#555";
 				ctx.beginPath();
 				ctx.moveTo(x + s/2, y + s/2);
-				ctx.lineTo(x + s/2 + Math.cos(rad) * 3 * scale, y + s/2 + Math.sin(rad) * 3 * scale);
+				ctx.lineTo(x + s/2 + Math.cos(rad) * (2 + (this.sp - 1)/2) * scale, y + s/2 + Math.sin(rad) * (2 + (this.sp - 1)/2) * scale);
 				ctx.stroke();
 			} ctx.fillStyle = this.color;
 			ctx.beginPath();
 			ctx.square(x, y, s, s*2/5);
 			ctx.fill();
 			ctx.beginPath();
-			ctx.fillStyle = gameColor;
+			ctx.fillStyle = `hsl(${(this.sp - 1)/(easy? 13: 7) * 360}, 100%, 50%)`;
 			ctx.square(x + s/4, y + s/4, s/2, s*1/5);
 			ctx.fill();
 			ctx.beginPath();

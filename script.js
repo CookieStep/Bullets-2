@@ -5,7 +5,8 @@ let unlocked = {
 	sword: saveData.sword == "true",
 	reversed: saveData.reversed == "true",
 	checkpoint: Number(saveData.checkpoint),
-	highscore: Number(saveData.highscore)
+	highscore: Number(saveData.highscore),
+	sworp: saveData.sworp == "true"
 };
 addEventListener("load", function() {
 	var {body, documentElement} = document;
@@ -38,12 +39,14 @@ function menu() {
 				"Practice",
 				"Hardcore",
 				"Insane",
+				"Impossible",
 				[
 					,"Hit space to play!",
 					"Just can't take the heat.",
 					"No fear, no rewards.",
 					"Death is not allowed.",
-					"No breaks, no rests."
+					"No breaks, no rests.",
+					"Don't waste your time."
 				]
 			];
 			var colors = [
@@ -53,6 +56,7 @@ function menu() {
 				"#fff",
 				"#f50",
 				"#700",
+				"#555",
 				"#fff",
 				"#ff5"
 			];
@@ -62,7 +66,8 @@ function menu() {
 				"Courier New",
 				"Comic Sans MS",
 				"Sans",
-				"Lucida Console"
+				"Lucida Console",
+				"Impact"
 			];
 		break;
 		case 2:
@@ -167,6 +172,12 @@ function menu() {
 				if(menu.selected == 4) hardcore = true;
 				if(menu.selected == 5) {
 					insane = true;
+					time = 0;
+				}
+				if(menu.selected == 6) {
+					insane = true;
+					hardcore = true;
+					impossible = true;
 					time = 0;
 				}
 				player.sk = 50;
