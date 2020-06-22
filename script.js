@@ -1,8 +1,8 @@
 const canvas = document.createElement("canvas"), ctx = canvas.getContext("2d");
 let saveData = localStorage;
 let unlocked = {
-	sword: Boolean(saveData.sword),
-	reversed: Boolean(saveData.reversed),
+	sword: saveData.sword == "true",
+	reversed: saveData.reversed == "true",
 	checkpoint: Number(saveData.checkpoint)
 };
 addEventListener("load", function() {
