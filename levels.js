@@ -118,6 +118,13 @@ let generateLevel = function() {
 				spawn(new Swerve);
 			}
 		break;
+		case 19:
+			var l;
+			for(var a = 0; a < 20; a++) {
+				l = new SnakeBoss(l);
+				spawn(l);
+			}
+		break;
 		default:
 			--Level;
 		break;

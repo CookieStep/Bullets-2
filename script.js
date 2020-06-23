@@ -3,10 +3,12 @@ let saveData = localStorage;
 if(!saveData.highscore) saveData.highscore = 0;
 let unlocked = {
 	sword: saveData.sword == "true",
+	sniper: saveData.sniper == "true",
 	reversed: saveData.reversed == "true",
 	checkpoint: Number(saveData.checkpoint),
 	highscore: Number(saveData.highscore),
-	sworp: saveData.sworp == "true"
+	sworp: saveData.sworp == "true",
+	snipep: saveData.snipep == "true"
 };
 addEventListener("load", function() {
 	var {body, documentElement} = document;
@@ -77,20 +79,24 @@ function menu() {
 				"Sword",
 				[
 					,"The default weapon",
-					"Slice through your enemies"
+					"Slice through your enemies",
+					"Good distance, keep at range"
 				]
 			];
+			if(unlocked.sniper) options.push("Sniper", options.pop());
 			var colors = [
 				"#fff",
 				player.color,
 				"#555",
 				"#fff"
 			];
+			if(unlocked.sniper) colors.push("#00d", colors.pop());
 			var fonts = [
 				"Georgia",
 				"Arial",
 				"Sans"
 			];
+			if(unlocked.sniper) fonts.push("Courier New")
 		break;
 		case 3:
 			var options = [
@@ -99,19 +105,23 @@ function menu() {
 			"Stage 2",
 			[
 				,"The easiest and most basic stage",
-				"Next level Adventure"
+				"Weird movement all throughout",
+				"And... they all wanna kill you"
 			]
 		];
+		if(unlocked.checkpoint > 1) options.push("Stage 3", options.pop());
 		var colors = [
 			"#fff",
 			"#ff0",
 			"#f00"
 		];
+		if(unlocked.checkpoint > 1) colors.push("#0f0");
 		var fonts = [
 			"Georgia",
 			"Comic Sans MS",
 			"Arial"
 		];
+		if(unlocked.checkpoint > 1) fonts.push("Courier New")
 		break;
 	} options[options.length - 1] = options[options.length - 1][menu.selected];
 	var highscore = unlocked.highscore && menu.active == 1
@@ -160,7 +170,9 @@ function menu() {
 		if(menu.active == 3) {
 			menu.active = 2;
 			delete player.sword;
+			delete player.sniper;
 		}
+		menu.selected = 1;
 	}
 	if(keys[" "] == 1 || keys.Enter == 1) {
 		if(keys[" "]) keys[" "] = 2;
@@ -183,15 +195,19 @@ function menu() {
 				player.sk = 50;
 				if(unlocked.sword) menu.active = 2;
 				else menu.active = false;
+				menu.selected = 1;
 			break;
 			case 2:
 				if(menu.selected == 2) player.sword = true;
+				if(menu.selected == 3) player.sniper = true;
 				if(unlocked.checkpoint) menu.active = 3;
 				else menu.active = false;
+				menu.selected = 1;
 			break;
 			case 3:
 				Level = menu.selected * 10 - 10;
 				menu.active = false;
+				menu.selected = 1;
 			break;
 		}
 	}

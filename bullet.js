@@ -10,6 +10,31 @@ let Bullet = function(rad, parent) {
 		},
 		draw() {
 			var {x, y, s} = this;
+			x *= scale; y *= scale; s *= scale;
+			ctx.fillStyle = this.color;
+			ctx.beginPath();
+			ctx.square(x, y, s);
+			ctx.fill();
+		},
+		exp: false,
+		color: parent.color,
+		friction: 1,
+		time: 100
+	});
+	bullets.push(this);
+};
+let SBullet = function(rad, parent) {
+	Entity.call(this);
+	this.spd *= easy? 5: 2;
+	Object.assign(this, {
+		s: 0.25,
+		velocity: {x: Math.cos(rad) * this.spd, y: Math.sin(rad) * this.spd},
+		tick() {
+			--this.time;
+			rad = Math.atan2(this.velocity.y, this.velocity.x);
+		},
+		draw() {
+			var {x, y, s} = this;
 			x *= scale; y *= scale; s *= scale/2;
 			x += s; y += s;
 			s /= Math.sin(Math.PI / 4);
@@ -21,6 +46,9 @@ let Bullet = function(rad, parent) {
 			ctx.moveTo(x + a, y + b);
 			ctx.lineTo(x - a, y - b);
 			ctx.stroke();
+		},
+		die() {
+			this.time -= 25;
 		},
 		exp: false,
 		color: parent.color,

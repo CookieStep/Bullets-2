@@ -24,10 +24,6 @@ let Entity = function() {
 				if(this instanceof Player) this.lastShot = easy? 10: 15;
 				else this.lastShot = easy? 150: 100;
 				for(let i = 0; i < this.sp; i++) {
-					//Math.PI
-					//rad
-					//rad - Math.PI/4
-					//rad + Math.PI/4
 					if(this instanceof Player) var bullet = new Bullet(rad + (i - (this.sp - 1)/2) * Math.PI/(this.sp + 1)/2, this);
 					else var bullet = new EBullet(rad, this);
 					var x = this.x + (this.s - bullet.s)/2,
@@ -36,6 +32,18 @@ let Entity = function() {
 					bullet.time /= Math.sqrt(this.sp);
 					Object.assign(bullet, {x, y});
 				}
+				this.sk -= (easy? 15: 25);
+			}
+		},
+		snipe(rad) {
+			if(!this.lastShot) {
+				if(this instanceof Player) this.lastShot = easy? 25: 50;
+					if(this instanceof Player) var bullet = new SBullet(rad, this);
+					var x = this.x + (this.s - bullet.s)/2,
+						y = this.y + (this.s - bullet.s)/2;
+					x += Math.cos(rad); y += Math.sin(rad);
+					bullet.speed *= this.sp;
+					Object.assign(bullet, {x, y});
 				this.sk -= (easy? 15: 25);
 			}
 		},

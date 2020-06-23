@@ -214,7 +214,7 @@ let Swerve = function(rad=(Math.PI * 2 * Math.random())) {
 	Object.assign(this, {
 		color: "#077",
 		velocity: {x: Math.cos(rad) * this.acl, y: Math.sin(rad) * this.acl},
-		xp: 25,
+		xp: 40,
 		draw() {
 			var {x, y, s} = this;
 			rad = Math.atan2(this.velocity.y, this.velocity.x);
@@ -251,7 +251,7 @@ let Scout = function(spaz) {
 	Entity.call(this);
 	Object.assign(this, {
 		color: "#aaa",
-		xp: 25,
+		xp: 40,
 		goal: 0,
 		tick() {
 			if(this.goal) {
@@ -266,7 +266,7 @@ let Scout = function(spaz) {
 			}else{
 				this.goal = 75 + Math.floor(Math.random() * 26);
 				if(spaz) this.goal -= 75
-				if(player.alive) {
+				if(player.alive && distanceBetween(this, player) < 5) {
 					var {x, y, s} = player
 				}else do{
 					var {x, y, s} = this;

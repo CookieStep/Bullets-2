@@ -128,6 +128,7 @@ let Player = function() {
 			if(keys.ArrowUp) y--;
 			if((x || y) && this.sk >= (easy? 15: 25)) {
 				if(player.sword) this.slice(Math.atan2(y, x));
+				if(player.sniper) this.snipe(Math.atan2(y, x));
 				else this.shoot(Math.atan2(y, x));
 			}
 			this.sk += easy? 0.25: 0.1;
@@ -202,7 +203,12 @@ let Player = function() {
 				if(player.sword) {
 					ctx.moveTo(x + Math.cos(4 * this.r/shot + r) * this.s * scale * 0.7, y + Math.sin(4 * this.r/shot + r) * this.s * scale * 0.7)
 					ctx.lineTo(x + Math.cos(4 * this.r/shot + r) * this.s * scale, y + Math.sin(4 * this.r/shot + r) * this.s * scale)
-				}else ctx.square(x + Math.cos(4 * this.r/shot + r) * this.s * scale - s/2, y + Math.sin(4 * this.r/shot + r) * this.s * scale - s/2, s, s/4)
+				}else if(player.sniper) {
+					ctx.moveTo(x + Math.cos(4 * this.r/shot + r) * this.s * scale - s/2, y + Math.sin(4 * this.r/shot + r) * this.s * scale)
+					ctx.lineTo(x + Math.cos(4 * this.r/shot + r) * this.s * scale + s/2, y + Math.sin(4 * this.r/shot + r) * this.s * scale)
+				}else{
+					ctx.square(x + Math.cos(4 * this.r/shot + r) * this.s * scale - s/2, y + Math.sin(4 * this.r/shot + r) * this.s * scale - s/2, s, s/4)
+				}
 			ctx.stroke();
 		}
 	});

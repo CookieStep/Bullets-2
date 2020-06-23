@@ -55,8 +55,9 @@ let exp = function(what) {
         what.px += what.xp * 0.75;
         what.xp = 0;
     }else{
-        if(Math.random() < 0.01) {
+        if(Math.random() < 0.01 * (easy? 2: 1)) {
             if(player.sword) {if(unlocked.sworp) var xp = new SPower}
+            if(player.sniper) {if(unlocked.snipep) var xp = new NPower}
             else var xp = new BPower;
             if(xp) {
                 xp.x = what.x + (what.s - xp.s) / 2;
@@ -125,6 +126,20 @@ let SPower = function() {
 			ctx.moveTo(x + a, y + b);
 			ctx.lineTo(x - a, y - b);
 			ctx.stroke();
+        }
+    })
+}
+let NPower = function() {
+    BPower.call(this);
+    Object.assign(this, {
+        draw() {
+            var s = this.s, x = this.x, y = this.y
+            s *= scale; x *= scale; y *= scale;
+            ctx.beginPath();
+            ctx.fillStyle = this.color;
+            ctx.moveTo(x, y + s/2);
+            ctx.lineTo(x + s, y + s/2);
+            ctx.stroke();
         }
     })
 }

@@ -10,9 +10,10 @@ let pause = function() {
 		options = [
 			`Checkpoints: ${unlocked.checkpoint}`,
 			`Sword: ${unlocked.sword? "yes": "no"}`,
-			`Sword Powerup: ${unlocked.sworp? "yes": "no"}`
+			`Sword Powerup: ${unlocked.sworp? "yes": "no"}`,
 		];
-	}
+		if(unlocked.sword) options.push(`Sniper: ${unlocked.sniper? "yes": "no"}`, `Sniper Powerup: ${unlocked.snipep? "yes": "no"}`)
+	} 
 	var h = canvas.height / (options.length + 2)
 	ctx.beginPath();
 	ctx.fillStyle = gameColor;
@@ -38,7 +39,8 @@ let pause = function() {
 	if(keys.Backspace == 1 || keys.Escape == 1) {
 		if(keys.Backspace) keys.Backspace = 2;
 		if(keys.Escape) keys.Escape = 2;
-		pause.active = false;
+		if(pause.active == 2) pause.active = true;
+		else pause.active = false;
 	}
 	if(keys[" "] == 1 || keys.Enter == 1) {
 		if(keys[" "]) keys[" "] = 2;

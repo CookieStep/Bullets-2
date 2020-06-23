@@ -182,7 +182,7 @@ let Dash = function() {
 	Object.assign(this, {
 		color: "#ffa",
 		velocity: {x: Math.cos(rad) * this.acl, y: Math.sin(rad) * this.acl},
-		xp: 50,
+		xp: 30,
 		draw() {
 			var {x, y, s} = this;
 			x *= scale; y *= scale; s *= scale;
@@ -387,7 +387,7 @@ let Switch = function(parent) {
 		color: "#770",
 		velocity: {x: Math.cos(rad) * this.acl, y: Math.sin(rad) * this.acl},
 		time: 0,
-		xp: 10,
+		xp: 30,
 		draw() {
 			var {x, y, s} = this;
 			x *= scale; y *= scale; s *= scale;
