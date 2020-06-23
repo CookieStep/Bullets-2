@@ -125,6 +125,9 @@ let generateLevel = function() {
 				spawn(l);
 			}
 		break;
+		case 20:
+			player.die();
+		break;
 		default:
 			--Level;
 		break;

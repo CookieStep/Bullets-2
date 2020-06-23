@@ -3,6 +3,8 @@ let SnakeBoss = function(parent) {
     var rad = Math.random() * 2 * Math.PI;
     Entity.call(this);
     var bias = Math.random() * 10;
+    tip.time = 100;
+    tip.text = "Snake Boss";
     Object.assign(this, {
         velocity: {x: Math.cos(rad) * this.acl, y: Math.sin(rad) * this.acl},
         color: "#0ff",
@@ -100,7 +102,7 @@ let SnakeBoss = function(parent) {
                         unlocks.push("Skill");
                         unlocked.sniper = true;
                         saveData.sniper = true;
-                    } if(hardcore && unlocked.checkpoint < 2) {
+                    } if(!easy && unlocked.checkpoint < 2) {
                         unlocks.push("Checkpoint");
                         unlocked.checkpoint = 2;
                         saveData.checkpoint = 2;

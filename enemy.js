@@ -228,7 +228,7 @@ let PatrolBoss = function() {
 					unlocks.push("Skill");
 					unlocked.sword = true;
 					saveData.sword = true;
-				} if(hardcore && !unlocked.checkpoint) {
+				} if(!easy && !unlocked.checkpoint) {
 					unlocks.push("Checkpoint");
 					unlocked.checkpoint = 1;
 					saveData.checkpoint = 1;

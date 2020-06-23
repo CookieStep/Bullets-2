@@ -14,7 +14,7 @@ let game = function(update=true) {
 			if(time <= 0) {
 				generateLevel();
 				time = Level % 10 == 0? (impossible? 7500: 3750): 1500;
-			}else time--
+			}else time--;
 		}else if(enemies.length == 0) if(time++ >= 50) generateLevel();
 		particles = particles.filter((particle) => particle.time > 0);
 		bullets = bullets.filter((bullet) => bullet.time > 0);
@@ -85,6 +85,7 @@ let game = function(update=true) {
 	if(Level % 10 == 0 && !insane) {
 		txt = `Boss ${Level / 10}`;
 	}
+	if(Level == 21) txt = "Complete";
 	ctx.fillText(txt, canvas.width - ctx.measureText(txt).width, scale);
 	txt = Math.round(score);
 	ctx.fillText(txt, 0, scale);
@@ -138,11 +139,10 @@ let Player = function() {
 		die() {
 			if(!this.inv && this.alive) {
 				exp(this);
-				if((lives > 0 && !hardcore) || practice) {
+				if(((lives > 0 && !hardcore) || practice) || Level == 21) {
 					this.x = game.width / 2;
 					this.y = game.height / 2;
-					this.sk = 50;
-					this.sp = 1;
+					this.sk = 50; this.sp = 1;
 					this.inv = easy? 250: 100;
 					--lives;
 				}else{
