@@ -59,7 +59,7 @@ let exp = function(what) {
             if(player.sword) {if(unlocked.sworp) var xp = new SPower}
             if(player.sniper) {if(unlocked.snipep) var xp = new NPower}
             else var xp = new BPower;
-            if(xp) {
+            if(false) {
                 xp.x = what.x + (what.s - xp.s) / 2;
                 xp.y = what.y + (what.s - xp.s) / 2;
                 particles.push(xp);
